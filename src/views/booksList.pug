@@ -1,0 +1,45 @@
+doctype html
+html(lang="pl")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="stylesheet", href="styles.css")
+    link(rel="stylesheet", href="stylesBookList.css")  
+    script(src="script.js")      
+    title Lista książek
+  body
+    div.header
+      a(href="/")
+        div.logo
+            img(src="img/book.png")
+      a(href="/")
+        h1 Biblioteka
+      div.menus
+        a(href="/books") Książki
+        a(href="/rentedBooks") Wypożyczone
+      
+    div.mainPanel
+      div.errorPanel
+      h1 Akademia Górniczo Hutnicza
+      div.bookPanel
+        each book in books
+          div.bookContainer(id=`book${book._id}` class=(book.no_copies === 0 ? 'noCopies' : ''))
+            img.book(src=book.url, alt=book.title, onclick=`addBook('${book._id}')`)
+            div.infoPanel
+                p Tytuł: #{book.title}
+                p Autor: #{book.author}
+                p.copies Liczba wolnych egzemplarzy: #{book.no_copies}
+                p Wydział: #{book.faculty}
+                p Kierunek studiów: #{book.major}
+        div.basket
+            h1 Koszyk
+            div.basketList
+              p No books in basket
+          
+         
+
+    div.stopka       
+        p Kontakt
+        p Telefon: 123 456 789
+        p Adres mailowy: biblio@agh.edu.pl
+

@@ -1,0 +1,36 @@
+doctype html
+html(lang="pl")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="stylesheet", href="styles.css")
+
+    title Zwrot książki
+  body
+    div.header
+      a(href="/")
+        div.logo
+            img(src="img/book.png")
+      a(href="/")
+        h1 Biblioteka
+      div.menus
+        a(href="/books") Książki
+      
+    div.mainPanel
+      h1 Akademia Górniczo Hutnicza
+      if error
+        h2 #{errorMSG}
+      else
+        h2 Książka #{title} została zwrócona
+        p Student: #{firstname} #{lastname}
+        a(href="/")
+            h1 POWRÓT 
+          
+          
+         
+
+    div.stopka       
+        p Kontakt
+        p Telefon: 123 456 789
+        p Adres mailowy: biblio@agh.edu.pl
+

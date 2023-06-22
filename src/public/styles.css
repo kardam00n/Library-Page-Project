@@ -1,0 +1,147 @@
+@keyframes example{
+    from{  
+        transform: rotate(0); 
+    }
+    to{
+        margin-left: 100px;
+
+    
+        transform: rotate(360deg);}
+}
+#animate{
+    animation-name: example;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate-reverse;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    margin: 0
+}
+
+a{
+    text-decoration: none;
+}
+
+a:visited {
+    color: black;
+  }
+
+.header{
+    position: fixed;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    background-color: lightgrey;
+    margin:0;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo{
+    margin-left:20px;
+}
+
+.logo img{
+    width: 40px;
+    height: auto;
+}
+
+.menus a{
+    padding-right: 20px;
+}
+
+.mainPanel{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.bookPanel{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+
+.bookContainer{
+    width: 300px;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
+
+
+.book{
+    width: 20vw;
+    height: auto;
+}
+
+.formPanel{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    
+    
+}
+
+.formPanel form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 60%;
+    border: solid black 1px;
+    padding-bottom: 10px;
+}
+
+.formPanel input{
+    margin-top: 10px;
+    height: 50px;
+    width: 90%;
+    margin-bottom: 10px;
+}
+
+.formPanel form button{
+    align-self: flex-end;
+}
+
+.stopka{
+    position: fixed;
+    height: 50px;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    background-color: lightgrey;
+    justify-content: space-evenly;
+}
+
+.stopka p{
+    font-weight: bold;
+}
+
+.errorPanel{
+    display: flex;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    position: fixed;
+    top: 50px;
+    width: 50%;
+    align-self: center;
+    justify-content: center;
+    border-radius: 10px;
+}

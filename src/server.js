@@ -237,7 +237,7 @@ app.post('/updateRentedList', async function(request, response, next) {
             }
           }
     }
-    response.send({"rentedBooks": rentedBooks})
+    response.send({"rentedBooks": rentedBooks, "error": error, "errorMSG": errorMSG})
 });
 
 app.post('/returnBook', async function (request, response, next) {
@@ -252,7 +252,6 @@ app.post('/returnBook', async function (request, response, next) {
     var errorMSG = '';
  
     var id = parseInt(request.body.id);
-    console.log(id);
     const student = await students.findOne({'firstname': firstname, 'lastname': lastname});
         if(!student){
             error = true;
@@ -260,7 +259,6 @@ app.post('/returnBook', async function (request, response, next) {
         }
         else{
             const book = await books.findOne({'_id': id})
-            console.log(book);
                 if(!book){
                     error = true;
                     errorMSG = "Podanej książki nie ma w naszej bazie";

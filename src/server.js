@@ -2,8 +2,8 @@ import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import {MongoClient} from 'mongodb';
 import bodyParser from 'body-parser';
+import db from './database.js';
 
 /* *************************** */
 /* Configuring the application */
@@ -32,101 +32,70 @@ const lastname = "Kowalski"
 /* ******** */
 
 app.get('/', async function (request, response, next) {
-    const client = new MongoClient('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2');
-    await client.connect();
-    const db = client.db('AGH');
-    const collection = db.collection('books');
-    const docs = await collection.find({'_id': {$lt: 5}}).toArray();
+    var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
     response.render('mainPage', {'mainBooks': docs}); // Render the 'index' view
 });
 
 app.get('/books', async function (request, response, next) {
-    const client = new MongoClient('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2');
-    await client.connect();
-    const db = client.db('AGH');
-    const collection = db.collection('books');
-    const docs = await collection.find({}).toArray();
-    response.render('booksList', {'books': docs}); // Render the 'index' view
+    var books = await db.all("SELECT * FROM books", []);
+    response.render('booksList', {'books': books});
 });
 
 app.post('/updateBookContainer', async function (request, response, next) {
-    const client = new MongoClient('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2');
-    await client.connect();
-    const db = client.db('AGH');
-    const books = db.collection('books');
-    var book = await books.findOne({"_id": request.body.id});
+    var book = await db.get("SELECT * FROM books WHERE id = ?", [request.body.id]);
     response.send({"book": book});
 });
 
 app.post('/rentBooks', async function (request, response, next) {
-    const client = new MongoClient('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2');
-    await client.connect();
-    const db = client.db('AGH');
-    const books = db.collection('books');
-    const students = db.collection('students');
-    const rentals = db.collection('rentals');
 
     var rentedBooks = request.body.rentedBooks;
     var error = false;
     var errorMSG = '';
 
-    var student = await students.findOne({"firstname" :firstname, "lastname" :lastname});
+    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
     if(student){
-        rentedBooks.forEach(async rbook => {
+        for (const rbook of rentedBooks) {
             var book = rbook.book;
             for(var i = 0; i < rbook.no_copies; i++){
-                await rentals.insertOne({'book_id': book._id, 'student_id': student._id});
+                await db.run("INSERT INTO rentals (book_id, student_id) VALUES (?, ?)", [book.id, student.id]);
             }
-            await books.updateOne(
-            { '_id': book._id },
-            { $set: { 'no_copies': book.no_copies-rbook.no_copies } }
-            );
-        });
-    }
-    else{
-        error = true;
-        errorMSG = "Nie znaleziono studenta"
+            await db.run("UPDATE books SET no_copies = ? WHERE id = ?", [book.no_copies-rbook.no_copies, book.id]);
+        }
     }
     response.send({"rentedBooks": rentedBooks, "error": error, "errorMSG": errorMSG});
+
 });
 
 app.post('/addBookToBasket', async function (request, response, next) {
-    const client = new MongoClient('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2');
-    await client.connect();
-    const db = client.db('AGH');
-    const books = db.collection('books');
-    const students = db.collection('students');
-    const rentals = db.collection('rentals');
-              
+
     const id = parseInt(request.body.id);
 
     var error = false;
     var errorMSG = '';
     var book = null;
- 
-    const student = await students.findOne({'firstname': firstname, 'lastname': lastname});
+
+    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
     if(!student){
+        error = true;
+        errorMSG = "Podany student nie znajduje się w naszej bazie";
+    }
+    else{
+        var found = await db.get("SELECT * FROM books WHERE id = ?", [id]);
+        book = found;
+        if(!found){
             error = true;
-            errorMSG = "Podany student nie znajduje się w naszej bazie";
+            errorMSG = "Podanej książki nie ma w naszej bazie";
         }
         else{
-            book = await books.findOne({'_id': id});  
-            if(!book){
-                    error = true;
-                    errorMSG = "Podanej książki nie ma w naszej bazie";
-                }
-                else{
-                    if(book.no_copies <= 0){
-                        error = true;
-                        errorMSG = "Brak dostępnych egzemplarzy do wypożyczenia";
-                    }
-                    else if(!error){
-                        errorMSG = "Znaleziono: " + String(book._id);
-                    }
-                }
+            if(found.no_copies <= 0){
+                error = true;
+                errorMSG = "Brak dostępnych egzemplarzy do wypożyczenia";
+            }
+            else if(!error){
+                errorMSG = "Znaleziono: " + String(found.id);
+            }
         }
-       
-    
+    }
     var bookArgs = {
         'error': error,
         'errorMSG': errorMSG,
@@ -136,148 +105,117 @@ app.post('/addBookToBasket', async function (request, response, next) {
 });
 
 app.post('/deleteBookFromBasket', async function (request, response, next) {
-    const client = new MongoClient('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2');
-    await client.connect();
-    const db = client.db('AGH');
-    const books = db.collection('books');
-    const students = db.collection('students');
-
     var bookID = request.body.id;
-    var book = await books.findOne({'_id': bookID});
+    var book = await db.get("SELECT * FROM books WHERE id = ?", [bookID]);
     response.send({'book' : book});
 });
 
 app.get('/rentedBooks', async function (request, response, next) {
-    const client = new MongoClient('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2');
-    await client.connect();
-    const db = client.db('AGH');
-    const books = db.collection('books');
-    const students = db.collection('students');
-    const rentals = db.collection('rentals');
-    
+
     var error = false;
     var errorMSG = '';
-
     var rentedBooks = []
-    var student = await students.findOne({"firstname": firstname, "lastname": lastname});
+
+    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
     if(!student){
         error = true;
         errorMSG = "Nie znaleziono użytkownika"
     }
     else{
-        var rents = await rentals.find({"student_id": student._id}).toArray();
+        var rents =  await db.all("SELECT * FROM rentals WHERE student_id = ?", [student.id]);
         for (let i = 0; i < rents.length; i++) {
             var rental = rents[i];
-            var book = await books.findOne({ "_id": rental.book_id });
-        
+            var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
             if (rentedBooks.length === 0) {
-              var newPos = {
-                'book': book,
-                'no_copies': 1,
-              };
-              rentedBooks.push(newPos);
-            } else {
-              const foundBook = rentedBooks.find(obj => obj.book._id === book._id);
-              if (foundBook) {
-                foundBook.no_copies += 1;
-              } else {
                 var newPos = {
-                  'book': book,
-                  'no_copies': 1,
+                    'book': book,
+                    'no_copies': 1,
                 };
                 rentedBooks.push(newPos);
-              }
+            } else {
+                const foundBook = rentedBooks.find(obj => obj.book.id === book.id);
+                if (foundBook) {
+                    foundBook.no_copies += 1;
+                } else {
+                    var newPos = {
+                        'book': book,
+                        'no_copies': 1,
+                    };
+                    rentedBooks.push(newPos);
+                }
             }
-          }
+        }
     }
-
     response.render('rented', {"error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks});
 });
 
 app.post('/updateRentedList', async function(request, response, next) {
-    const client = new MongoClient('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2');
-    await client.connect();
-    const db = client.db('AGH');
-    const books = db.collection('books');
-    const students = db.collection('students');
-    const rentals = db.collection('rentals');
-    
     var error = false;
     var errorMSG = '';
+    var rentedBooks = [];
 
-    var rentedBooks = []
-    var student = await students.findOne({"firstname": firstname, "lastname": lastname});
+    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
     if(!student){
         error = true;
         errorMSG = "Nie znaleziono użytkownika"
     }
     else{
-        var rents = await rentals.find({"student_id": student._id}).toArray();
+        var rents = await db.all("SELECT * FROM rentals WHERE student_id = ?", [student.id]);
         for (let i = 0; i < rents.length; i++) {
             var rental = rents[i];
-            var book = await books.findOne({ "_id": rental.book_id });
-        
+            var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
             if (rentedBooks.length === 0) {
-              var newPos = {
-                'book': book,
-                'no_copies': 1,
-              };
-              rentedBooks.push(newPos);
-            } else {
-              const foundBook = rentedBooks.find(obj => obj.book._id === book._id);
-              if (foundBook) {
-                foundBook.no_copies += 1;
-              } else {
                 var newPos = {
-                  'book': book,
-                  'no_copies': 1,
+                    'book': book,
+                    'no_copies': 1,
                 };
                 rentedBooks.push(newPos);
-              }
+            } else {
+                const foundBook = rentedBooks.find(obj => obj.book.id === book.id);
+                if (foundBook) {
+                    foundBook.no_copies += 1;
+                } else {
+                    var newPos = {
+                        'book': book,
+                        'no_copies': 1,
+                    };
+                    rentedBooks.push(newPos);
+                }
             }
-          }
+        }
     }
     response.send({"rentedBooks": rentedBooks, "error": error, "errorMSG": errorMSG})
 });
 
 app.post('/returnBook', async function (request, response, next) {
-    const client = new MongoClient('mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.2');
-    await client.connect();
-    const db = client.db('AGH');
-    const books = db.collection('books');
-    const students = db.collection('students');
-    const rentals = db.collection('rentals');
-                            
     var error = false;
     var errorMSG = '';
  
     var id = parseInt(request.body.id);
-    const student = await students.findOne({'firstname': firstname, 'lastname': lastname});
-        if(!student){
+    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
+    if(!student){
+        error = true;
+        errorMSG = "Podany student nie znajduje się w naszej bazie";
+    }
+    else{
+        var book = await db.get("SELECT * FROM books WHERE id = ?", [id]);
+        if(!book){
             error = true;
-            errorMSG = "Podany student nie znajduje się w naszej bazie";
+            errorMSG = "Podanej książki nie ma w naszej bazie";
         }
         else{
-            const book = await books.findOne({'_id': id})
-                if(!book){
-                    error = true;
-                    errorMSG = "Podanej książki nie ma w naszej bazie";
-                }
-                else{
-                    const rental = await rentals.findOne({'book_id': book._id, 'student_id': student._id});
-                    if(!rental){
-                        error = true;
-                        errorMSG = "Podany student nie wypożyczał podanej książki";
-                    }
-                    if(!error){
-                       await rentals.deleteOne(rental);
-                       await books.updateOne(
-                        { '_id': book._id },
-                        { $set: { 'no_copies': book.no_copies+1 } }
-                      );
-                    }
-                }
+            var rental = await db.get("SELECT * FROM rentals WHERE book_id = ? AND student_id = ?", [book.id, student.id]);
+            console.log(rental)
+            if(!rental){
+                error = true;
+                errorMSG = "Podany student nie wypożyczał podanej książki";
+            }
+            if(!error){
+                await db.run("DELETE FROM rentals WHERE id = ? ", [rental.id]);
+                await db.run("UPDATE books SET no_copies = ? WHERE id = ?", [book.no_copies+1, book.id]);
+            }
         }
+    }
     response.send({"error": error, "errorMSG": errorMSG, "id": id});
 });
 

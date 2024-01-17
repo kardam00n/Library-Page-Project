@@ -27,13 +27,13 @@ html(lang="pl")
       div.bookPanel
         h1 Wypożyczone przez ciebie książki
         each rbook in rentedBooks
-          div.bookContainer(id=`book${rbook.book._id}`)
+          div.bookContainer(id=`book${rbook.book.id}`)
             img.book(src=rbook.book.url, alt=rbook.book.title)
             div.infoPanel
                 p Tytuł: #{rbook.book.title}
                 p Autor: #{rbook.book.author}
                 p.copies Liczba wypożyczonych egzemplarzy: #{rbook.no_copies}
-                button(type="button", onclick=`returnBook('${rbook.book._id}')`) Oddaj
+                button(type="button", onclick=`returnBook('${rbook.book.id}')`) Oddaj
 
           
           

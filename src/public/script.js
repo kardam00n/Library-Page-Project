@@ -29,8 +29,6 @@ function rentBooks(){
 
 function addBook(id){
     const xhr = new XMLHttpRequest();
-    
-    
     xhr.addEventListener("load", function(evt){
         var response = JSON.parse(xhr.responseText);
         if(response.error){
@@ -47,7 +45,7 @@ function addBook(id){
                 rentedBooks.push(newPos);
             }
             else{
-                const foundBook = rentedBooks.find(obj => obj.book._id === response.book._id);
+                const foundBook = rentedBooks.find(obj => obj.book.id === response.book.id);
                 if (foundBook && response.book.no_copies - foundBook.no_copies > 0) {
                     foundBook.no_copies+=1;
                   }
@@ -83,7 +81,7 @@ function deleteBook(id){
     
     xhr.addEventListener("load", function(evt){
         var response = JSON.parse(xhr.responseText);
-        const foundBook = rentedBooks.find(obj => obj.book._id === response.book._id);
+        const foundBook = rentedBooks.find(obj => obj.book.id === response.book.id);
         if(foundBook.no_copies > 1){
           foundBook.no_copies -=1;
         }
@@ -137,7 +135,7 @@ function updateBasket() {
         basketimg.src = rbook.book.url;
 
         basketimg.addEventListener('click', function() {
-            deleteBook(rbook.book._id);
+            deleteBook(rbook.book.id);
           });
 
         var basketCount = document.createElement('p');
@@ -163,11 +161,11 @@ function updateBookContainer(book){
     
     
     xhr.addEventListener("load", function(evt){
-      var foundBookConainter = document.querySelector("#book" + String(book._id));
+      var foundBookConainter = document.querySelector("#book" + String(book.id));
       var foundBookCopies = foundBookConainter.querySelector(".copies");
       var updatedBook = JSON.parse(xhr.responseText).book;
       if (rentedBooks && rentedBooks.length > 0) {
-        var foundBook = rentedBooks.find(obj => obj.book._id === book._id);
+        var foundBook = rentedBooks.find(obj => obj.book.id === book.id);
         if(foundBook){
           var leftBooks = book.no_copies - foundBook.no_copies;
           foundBookCopies.innerText = "Liczba wolnych egzemplarzy: " + leftBooks + "/" + updatedBook.no_copies;
@@ -194,7 +192,7 @@ function updateBookContainer(book){
     });
     xhr.open('POST',"http://localhost:8000/updateBookContainer", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({"id": book._id}));
+    xhr.send(JSON.stringify({"id": book.id}));
 }
 
 function updateRentedList(){
@@ -218,7 +216,7 @@ function updateRentedList(){
      rentedBooks.forEach((rbook) => {
       // Create the book container
       const bookDiv = document.createElement('div');
-      bookDiv.setAttribute('id', `book${rbook.book._id}`);
+      bookDiv.setAttribute('id', `book${rbook.book.id}`);
       bookDiv.classList.add('bookContainer');
   
       // Create the book image element
@@ -247,7 +245,7 @@ function updateRentedList(){
       returnButton.setAttribute('type', 'button');
       returnButton.textContent = 'Oddaj';
       returnButton.addEventListener('click', () => {
-        returnBook(rbook.book._id);
+        returnBook(rbook.book.id);
       });
   
       // Append elements to their respective parents

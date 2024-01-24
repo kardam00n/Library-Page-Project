@@ -31,7 +31,7 @@ html
           input(type="password", id="password", name="password", required=true, onchange="handleChange(event)")
           br
           input(type="submit", value="Login")
-          p.error(id="login-error") 
+          p.error(id="login-error")
         script.
           function handleChange(event) {
             const { name, value } = event.target;
@@ -58,7 +58,7 @@ html
                 console.log('Login successful:', data);
                 const errorElement = document.getElementById('login-error');
                 if (errorElement) {
-                  errorElement.innerText = '';  // Очищаємо повідомлення про помилку при успішному вході
+                  errorElement.innerText = ''; 
                 }
                 window.location.href = '/';
               } else {

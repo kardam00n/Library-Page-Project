@@ -5,6 +5,8 @@ import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import db from './database.js';
 
+import bcrypt from 'bcrypt';
+
 /* *************************** */
 /* Configuring the application */
 /* *************************** */
@@ -228,11 +230,12 @@ app.post('/login', async function (request, response, next) {
     const username = request.body.username;
     const password = request.body.password;
 
-    // Perform login logic (validate username and password)
-    // Example: You might check the credentials against a database
-    // For simplicity, I'll just check if the username and password are non-empty
-    if (username && password) {
-        // Redirect to the main page if login is successful
+    // Fetch the user's hashed password from the database (replace this with your actual database query)
+    const user = await db.get("SELECT * FROM users WHERE username = ?", [username]);
+
+    if (user && await bcrypt.compare(password, user.hashed_password)) {
+        // Passwords match, login is successful
+        // You can create a session or JWT token here if needed
         response.redirect('/');
     } else {
         // Render the login page with an error message if login fails

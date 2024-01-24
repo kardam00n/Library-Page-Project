@@ -1,9 +1,9 @@
-.bookPanel{
+.bookPanel {
     flex-direction: column;
     align-items: center;
 }
 
-.bookContainer{
+.bookContainer {
     flex-direction: row;
     width: 60%;
     height: 30vh;
@@ -13,7 +13,7 @@
     justify-content: space-around;
 }
 
-.bookContainer img{
+.bookContainer img {
     height: 100%;
     width: auto;
 }
@@ -27,6 +27,7 @@
     border-radius: 10px;
     padding: 10px
 }
+
 .basketContainer {
     height: 100px;
     width: auto;
@@ -35,14 +36,27 @@
     align-items: center;
 }
 
-.basketContainer p{
+.basketContainer p {
     font-weight: bolder;
 }
 
-.basketContainer img{
+.basketContainer img {
     height: 90%;
     width: auto;
 }
-.noCopies{
+
+.noCopies {
     background-color: rgb(216, 89, 89);
+}
+
+.menuleft {
+    display: flex;
+    justify-content: space-between;
+}
+
+.menuleft a {
+    color: black;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }

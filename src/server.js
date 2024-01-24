@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.json());
 app.use(morgan('dev'));
-app.use(express.static(__dirname + '/public')); 
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
@@ -33,17 +33,17 @@ const lastname = "Kowalski"
 
 app.get('/', async function (request, response, next) {
     var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
-    response.render('mainPage', {'mainBooks': docs}); // Render the 'index' view
+    response.render('mainPage', { 'mainBooks': docs }); // Render the 'index' view
 });
 
 app.get('/books', async function (request, response, next) {
     var books = await db.all("SELECT * FROM books", []);
-    response.render('booksList', {'books': books});
+    response.render('booksList', { 'books': books });
 });
 
 app.post('/updateBookContainer', async function (request, response, next) {
     var book = await db.get("SELECT * FROM books WHERE id = ?", [request.body.id]);
-    response.send({"book": book});
+    response.send({ "book": book });
 });
 
 app.post('/rentBooks', async function (request, response, next) {
@@ -53,16 +53,16 @@ app.post('/rentBooks', async function (request, response, next) {
     var errorMSG = '';
 
     var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
-    if(student){
+    if (student) {
         for (const rbook of rentedBooks) {
             var book = rbook.book;
-            for(var i = 0; i < rbook.no_copies; i++){
+            for (var i = 0; i < rbook.no_copies; i++) {
                 await db.run("INSERT INTO rentals (book_id, student_id) VALUES (?, ?)", [book.id, student.id]);
             }
-            await db.run("UPDATE books SET no_copies = ? WHERE id = ?", [book.no_copies-rbook.no_copies, book.id]);
+            await db.run("UPDATE books SET no_copies = ? WHERE id = ?", [book.no_copies - rbook.no_copies, book.id]);
         }
     }
-    response.send({"rentedBooks": rentedBooks, "error": error, "errorMSG": errorMSG});
+    response.send({ "rentedBooks": rentedBooks, "error": error, "errorMSG": errorMSG });
 
 });
 
@@ -75,23 +75,23 @@ app.post('/addBookToBasket', async function (request, response, next) {
     var book = null;
 
     var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
-    if(!student){
+    if (!student) {
         error = true;
         errorMSG = "Podany student nie znajduje się w naszej bazie";
     }
-    else{
+    else {
         var found = await db.get("SELECT * FROM books WHERE id = ?", [id]);
         book = found;
-        if(!found){
+        if (!found) {
             error = true;
             errorMSG = "Podanej książki nie ma w naszej bazie";
         }
-        else{
-            if(found.no_copies <= 0){
+        else {
+            if (found.no_copies <= 0) {
                 error = true;
                 errorMSG = "Brak dostępnych egzemplarzy do wypożyczenia";
             }
-            else if(!error){
+            else if (!error) {
                 errorMSG = "Znaleziono: " + String(found.id);
             }
         }
@@ -107,7 +107,7 @@ app.post('/addBookToBasket', async function (request, response, next) {
 app.post('/deleteBookFromBasket', async function (request, response, next) {
     var bookID = request.body.id;
     var book = await db.get("SELECT * FROM books WHERE id = ?", [bookID]);
-    response.send({'book' : book});
+    response.send({ 'book': book });
 });
 
 app.get('/rentedBooks', async function (request, response, next) {
@@ -117,49 +117,11 @@ app.get('/rentedBooks', async function (request, response, next) {
     var rentedBooks = []
 
     var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
-    if(!student){
+    if (!student) {
         error = true;
         errorMSG = "Nie znaleziono użytkownika"
     }
-    else{
-        var rents =  await db.all("SELECT * FROM rentals WHERE student_id = ?", [student.id]);
-        for (let i = 0; i < rents.length; i++) {
-            var rental = rents[i];
-            var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
-            if (rentedBooks.length === 0) {
-                var newPos = {
-                    'book': book,
-                    'no_copies': 1,
-                };
-                rentedBooks.push(newPos);
-            } else {
-                const foundBook = rentedBooks.find(obj => obj.book.id === book.id);
-                if (foundBook) {
-                    foundBook.no_copies += 1;
-                } else {
-                    var newPos = {
-                        'book': book,
-                        'no_copies': 1,
-                    };
-                    rentedBooks.push(newPos);
-                }
-            }
-        }
-    }
-    response.render('rented', {"error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks});
-});
-
-app.post('/updateRentedList', async function(request, response, next) {
-    var error = false;
-    var errorMSG = '';
-    var rentedBooks = [];
-
-    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
-    if(!student){
-        error = true;
-        errorMSG = "Nie znaleziono użytkownika"
-    }
-    else{
+    else {
         var rents = await db.all("SELECT * FROM rentals WHERE student_id = ?", [student.id]);
         for (let i = 0; i < rents.length; i++) {
             var rental = rents[i];
@@ -184,39 +146,98 @@ app.post('/updateRentedList', async function(request, response, next) {
             }
         }
     }
-    response.send({"rentedBooks": rentedBooks, "error": error, "errorMSG": errorMSG})
+    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks });
+});
+
+app.post('/updateRentedList', async function (request, response, next) {
+    var error = false;
+    var errorMSG = '';
+    var rentedBooks = [];
+
+    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
+    if (!student) {
+        error = true;
+        errorMSG = "Nie znaleziono użytkownika"
+    }
+    else {
+        var rents = await db.all("SELECT * FROM rentals WHERE student_id = ?", [student.id]);
+        for (let i = 0; i < rents.length; i++) {
+            var rental = rents[i];
+            var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
+            if (rentedBooks.length === 0) {
+                var newPos = {
+                    'book': book,
+                    'no_copies': 1,
+                };
+                rentedBooks.push(newPos);
+            } else {
+                const foundBook = rentedBooks.find(obj => obj.book.id === book.id);
+                if (foundBook) {
+                    foundBook.no_copies += 1;
+                } else {
+                    var newPos = {
+                        'book': book,
+                        'no_copies': 1,
+                    };
+                    rentedBooks.push(newPos);
+                }
+            }
+        }
+    }
+    response.send({ "rentedBooks": rentedBooks, "error": error, "errorMSG": errorMSG })
 });
 
 app.post('/returnBook', async function (request, response, next) {
     var error = false;
     var errorMSG = '';
- 
+
     var id = parseInt(request.body.id);
     var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
-    if(!student){
+    if (!student) {
         error = true;
         errorMSG = "Podany student nie znajduje się w naszej bazie";
     }
-    else{
+    else {
         var book = await db.get("SELECT * FROM books WHERE id = ?", [id]);
-        if(!book){
+        if (!book) {
             error = true;
             errorMSG = "Podanej książki nie ma w naszej bazie";
         }
-        else{
+        else {
             var rental = await db.get("SELECT * FROM rentals WHERE book_id = ? AND student_id = ?", [book.id, student.id]);
             console.log(rental)
-            if(!rental){
+            if (!rental) {
                 error = true;
                 errorMSG = "Podany student nie wypożyczał podanej książki";
             }
-            if(!error){
+            if (!error) {
                 await db.run("DELETE FROM rentals WHERE id = ? ", [rental.id]);
-                await db.run("UPDATE books SET no_copies = ? WHERE id = ?", [book.no_copies+1, book.id]);
+                await db.run("UPDATE books SET no_copies = ? WHERE id = ?", [book.no_copies + 1, book.id]);
             }
         }
     }
-    response.send({"error": error, "errorMSG": errorMSG, "id": id});
+    response.send({ "error": error, "errorMSG": errorMSG, "id": id });
+});
+
+// Add the following route for handling login requests
+app.get('/login', function (request, response, next) {
+    response.render('login'); // Render the 'login' view
+});
+
+app.post('/login', async function (request, response, next) {
+    const username = request.body.username;
+    const password = request.body.password;
+
+    // Perform login logic (validate username and password)
+    // Example: You might check the credentials against a database
+    // For simplicity, I'll just check if the username and password are non-empty
+    if (username && password) {
+        // Redirect to the main page if login is successful
+        response.redirect('/');
+    } else {
+        // Render the login page with an error message if login fails
+        response.render('login', { error: 'Invalid username or password' });
+    }
 });
 
 /* ************************************************ */

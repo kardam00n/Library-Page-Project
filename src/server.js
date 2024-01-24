@@ -5,6 +5,8 @@ import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import db from './database.js';
 
+import bcrypt from 'bcrypt';
+
 /* *************************** */
 /* Configuring the application */
 /* *************************** */
@@ -219,26 +221,6 @@ app.post('/returnBook', async function (request, response, next) {
     response.send({ "error": error, "errorMSG": errorMSG, "id": id });
 });
 
-// Add the following route for handling login requests
-app.get('/login', function (request, response, next) {
-    response.render('login'); // Render the 'login' view
-});
-
-app.post('/login', async function (request, response, next) {
-    const username = request.body.username;
-    const password = request.body.password;
-
-    // Perform login logic (validate username and password)
-    // Example: You might check the credentials against a database
-    // For simplicity, I'll just check if the username and password are non-empty
-    if (username && password) {
-        // Redirect to the main page if login is successful
-        response.redirect('/');
-    } else {
-        // Render the login page with an error message if login fails
-        response.render('login', { error: 'Invalid username or password' });
-    }
-});
 
 /* ************************************************ */
 

@@ -4,7 +4,8 @@ html
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    link(rel="stylesheet", href="styles.css")      
+    link(rel="stylesheet", href="styles.css")
+    link(rel="stylesheet", href="login.css")     
     title Login
   body
     div.header
@@ -22,11 +23,56 @@ html
         h1 Login
         if error
           p.error= error
-        form(action="/login", method="post")
+        form(action="/login", method="post", onsubmit="return handleSubmit(event);")
           label(for="username") Username:
-          input(type="text", id="username", name="username", required=true)
+          input(type="text", id="username", name="username", required=true, onchange="handleChange(event)")
           br
           label(for="password") Password:
-          input(type="password", id="password", name="password", required=true)
+          input(type="password", id="password", name="password", required=true, onchange="handleChange(event)")
           br
           input(type="submit", value="Login")
+          p.error(id="login-error") 
+        script.
+          function handleChange(event) {
+            const { name, value } = event.target;
+            document.getElementById(name).value = value;
+          }
+
+          async function handleSubmit(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+              const response = await fetch('http://localhost:5000/login', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+              });
+
+              if (response.ok) {
+                const data = await response.json();
+                console.log('Login successful:', data);
+                const errorElement = document.getElementById('login-error');
+                if (errorElement) {
+                  errorElement.innerText = '';  // Очищаємо повідомлення про помилку при успішному вході
+                }
+                window.location.href = '/';
+              } else {
+                const errorElement = document.getElementById('login-error');
+                if (errorElement) {
+                  errorElement.innerText = 'Login failed. Username or password is not correct.';
+                }
+                console.error('Login failed. Username or password is not correct.');
+              }
+            } catch (error) {
+              const errorElement = document.getElementById('login-error');
+              if (errorElement) {
+                errorElement.innerText = 'An error occurred during login. Please try again later.';
+              }
+              console.error('An error occurred during login:', error);
+            }
+          }

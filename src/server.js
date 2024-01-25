@@ -38,6 +38,27 @@ const lastname = "Kowalski"
 //     response.sendFile(path.join(__dirname, 'views', 'mainPage.html'));
 // });
 
+const user = "test";
+const hashed_password = bcrypt.hashSync("test", 10); // Hash the password (adjust the saltRounds as needed)
+
+app.get('/login', function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
+
+app.post('/login', async function (req, res, next) {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    if (username !== user || !bcrypt.compareSync(password, hashed_password)) {
+        return res.status(401).json({ msg: 'Bad username or password' });
+    }
+
+    // Passwords match, login is successful
+    // You can create a session or JWT token here if needed
+    res.json({ token: 'your_access_token' });
+});
+
+
 app.get('/', async function (request, response, next) {
     var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
     response.render('mainPage', { 'mainBooks': docs }); // Render the 'index' view
@@ -224,26 +245,6 @@ app.post('/returnBook', async function (request, response, next) {
         }
     }
     response.send({ "error": error, "errorMSG": errorMSG, "id": id });
-});
-
-const user = "test";
-const hashed_password = bcrypt.hashSync("test", 10); // Hash the password (adjust the saltRounds as needed)
-
-app.get('/login', function (req, res, next) {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
-});
-
-app.post('/login', async function (req, res, next) {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    if (username !== user || !bcrypt.compareSync(password, hashed_password)) {
-        return res.status(401).json({ msg: 'Bad username or password' });
-    }
-
-    // Passwords match, login is successful
-    // You can create a session or JWT token here if needed
-    res.json({ token: 'your_access_token' });
 });
 
 /* ************************************************ */

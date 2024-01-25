@@ -33,6 +33,11 @@ const lastname = "Kowalski"
 /* "Routes" */
 /* ******** */
 
+// app.get('/', async function (request, response, next) {
+//     var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
+//     response.sendFile(path.join(__dirname, 'views', 'mainPage.html'));
+// });
+
 app.get('/', async function (request, response, next) {
     var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
     response.render('mainPage', { 'mainBooks': docs }); // Render the 'index' view
@@ -223,7 +228,7 @@ app.post('/returnBook', async function (request, response, next) {
 
 // Add the following route for handling login requests
 app.get('/login', function (request, response, next) {
-    response.render('login'); // Render the 'login' view
+    response.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
 app.post('/login', async function (request, response, next) {

@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import db from './database.js';
 
 import bcrypt from 'bcrypt';
+import session from 'express-session';
 
 /* *************************** */
 /* Configuring the application */
@@ -25,6 +26,7 @@ app.use(morgan('dev'));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(session({ secret: "Your secret key" }));
 
 const firstname = "Jan"
 const lastname = "Kowalski"
@@ -52,12 +54,22 @@ app.post('/login', async function (req, res, next) {
     if (username !== user || !bcrypt.compareSync(password, hashed_password)) {
         return res.status(401).json({ msg: 'Bad username or password' });
     }
-
+    var newUser = { id: req.body.username, password: req.body.password };
+    req.session.user = newUser;
     // Passwords match, login is successful
     // You can create a session or JWT token here if needed
     res.json({ token: 'your_access_token' });
 });
 
+function checkSignIn(req, res, next) {
+    if (req.session.user) {
+        next();  // Якщо сесія існує, перейти до сторінки
+    } else {
+        var err = new Error("Not logged in!");
+        console.log(req.session.user);
+        next(err);  // Помилка, спроба доступу до несанкціонованої сторінки!
+    }
+}
 
 app.get('/', async function (request, response, next) {
     var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
@@ -74,7 +86,7 @@ app.post('/updateBookContainer', async function (request, response, next) {
     response.send({ "book": book });
 });
 
-app.post('/rentBooks', async function (request, response, next) {
+app.post('/rentBooks', checkSignIn, async function (request, response, next) {
 
     var rentedBooks = request.body.rentedBooks;
     var error = false;

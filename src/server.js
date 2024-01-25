@@ -226,26 +226,24 @@ app.post('/returnBook', async function (request, response, next) {
     response.send({ "error": error, "errorMSG": errorMSG, "id": id });
 });
 
-// Add the following route for handling login requests
-app.get('/login', function (request, response, next) {
-    response.sendFile(path.join(__dirname, 'views', 'login.html'));
+const user = "test";
+const hashed_password = bcrypt.hashSync("test", 10); // Hash the password (adjust the saltRounds as needed)
+
+app.get('/login', function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
-app.post('/login', async function (request, response, next) {
-    const username = request.body.username;
-    const password = request.body.password;
+app.post('/login', async function (req, res, next) {
+    const username = req.body.username;
+    const password = req.body.password;
 
-    // Fetch the user's hashed password from the database (replace this with your actual database query)
-    const user = await db.get("SELECT * FROM users WHERE username = ?", [username]);
-
-    if (user && await bcrypt.compare(password, user.hashed_password)) {
-        // Passwords match, login is successful
-        // You can create a session or JWT token here if needed
-        response.redirect('/');
-    } else {
-        // Render the login page with an error message if login fails
-        response.render('login', { error: 'Invalid username or password' });
+    if (username !== user || !bcrypt.compareSync(password, hashed_password)) {
+        return res.status(401).json({ msg: 'Bad username or password' });
     }
+
+    // Passwords match, login is successful
+    // You can create a session or JWT token here if needed
+    res.json({ token: 'your_access_token' });
 });
 
 /* ************************************************ */

@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './css/index.css';
-import reportWebVitals from './reportWebVitals';
-import Layout from "./pages/Layout";
-import MainPage from "./pages/MainPage";
+import reportWebVitals from './reportWebVitals.js';
+import Layout from "./pages/Layout.js";
+import MainPage from "./pages/MainPage.js";
 // import HelloWorld from "./pages/HelloWorld";
 // import BooksList from "./pages/BookList";
-import LoginPage from "./pages/LoginPage";
+import LoginPage from "./pages/LoginPage.js";
 // import NoPage from "./pages/NoPage";
 
 export default function App() {

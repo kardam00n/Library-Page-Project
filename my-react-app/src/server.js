@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import db from './database.js';
+import cors from 'cors';
 
 import bcrypt from 'bcrypt';
 import session from 'express-session';
@@ -27,6 +28,7 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(session({ secret: "Your secret key" }));
+app.use(cors());
 
 const firstname = "Jan"
 const lastname = "Kowalski"

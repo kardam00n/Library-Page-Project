@@ -5,8 +5,8 @@ import './css/index.css';
 import reportWebVitals from './reportWebVitals.js';
 import Layout from "./pages/Layout.js";
 import MainPage from "./pages/MainPage.js";
-// import HelloWorld from "./pages/HelloWorld";
-// import BooksList from "./pages/BookList";
+import RentedBooks from "./pages/RentedBooks.js";
+import Books from "./pages/BooksList.js";
 import LoginPage from "./pages/LoginPage.js";
 // import NoPage from "./pages/NoPage";
 
@@ -18,11 +18,11 @@ export default function App() {
           <Route index element={<MainPage />} />
           <Route path="main" element={<MainPage />} />
           <Route path="login" element={<LoginPage />} />
-          {/* <Route path="books" element={<BooksList />} /> */}
-          {/* <Route path="HelloWorld" element={<HelloWorld />} />
-          
+          <Route path="rentedBooks" element={<RentedBooks />} />
+          <Route path="books" element={<Books />} />
 
-          <Route path="*" element={<NoPage />} /> */}
+
+          {/* <Route path="*" element={<NoPage />} /> */}
         </Route>
       </Routes>
     </BrowserRouter>

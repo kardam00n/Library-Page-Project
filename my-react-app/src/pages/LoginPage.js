@@ -47,33 +47,43 @@ const LoginForm = () => {
 
 
     return (
-        <div className="login-form">
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Email:
-                    <input
-                        type="username"
-                        name="username"
-                        value={loginData.username}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        name="password"
-                        value={loginData.password}
-                        onChange={handleChange}
-                        required
-                    />
-                </label>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
-                <button type="submit">Login</button>
-            </form>
+        <div className="login">
+            <div className="login-form">
+                <h2>Login</h2>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Email:
+                        <input
+                            type="username"
+                            name="username"
+                            value={loginData.username}
+                            onChange={handleChange}
+                            required
+                        />
+                    </label>
+                    <label>
+                        Password:
+                        <input
+                            type="password"
+                            name="password"
+                            value={loginData.password}
+                            onChange={handleChange}
+                            required
+                        />
+                    </label>
+                    {errorMessage && <p className="error-message">{errorMessage}</p>}
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+            <div className="stopka">
+                <p>Kontakt</p>
+                <p>Telefon: 123 456 789</p>
+                <p>Adres mailowy: biblio@agh.edu.pl</p>
+            </div>
         </div>
+
+
+
     );
 };
 

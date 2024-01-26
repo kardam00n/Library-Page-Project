@@ -1,6 +1,8 @@
 import { Outlet, Link } from "react-router-dom";
 import '../css/styles.css';
 import book from '../img/book.png';
+import LogoutButton from "./LogoutButton.js";
+
 const Layout = () => {
     return (
         <>
@@ -12,7 +14,7 @@ const Layout = () => {
                         </div>
                     </Link>
                     <Link to="/login">Login</Link>
-                    <Link to="/logout">Logout</Link>
+                    <LogoutButton />
                 </div>
                 <Link to="/">
                     <h1>Biblioteka</h1>

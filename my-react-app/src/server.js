@@ -45,9 +45,9 @@ const lastname = "Kowalski"
 const user = "test";
 const hashed_password = bcrypt.hashSync("test", 10); // Hash the password (adjust the saltRounds as needed)
 
-app.get('/login', function (req, res, next) {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
-});
+// app.get('/login', function (req, res, next) {
+//     res.sendFile(path.join(__dirname, 'views', 'login.html'));
+// });
 
 app.post('/login', async function (req, res, next) {
     const username = req.body.username;
@@ -72,6 +72,20 @@ function checkSignIn(req, res, next) {
         return res.redirect('login'); // Redirect directly if not logged in
     }
 }
+
+app.post('/logout', async function (req, res, next) {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    if (username !== user || !bcrypt.compareSync(password, hashed_password)) {
+        return res.status(401).json({ msg: 'Bad username or password' });
+    }
+    var newUser = { id: req.body.username, password: req.body.password };
+    req.session.user = newUser;
+    // Passwords match, login is successful
+    // You can create a session or JWT token here if needed
+    res.json({ token: 'your_access_token' });
+});
 
 app.get('/logout', function (req, res) {
     // Clear the user session

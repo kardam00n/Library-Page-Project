@@ -8,7 +8,7 @@ import MainPage from "./pages/MainPage.js";
 import RentedBooks from "./pages/RentedBooks.js";
 import Books from "./pages/BooksList.js";
 import LoginPage from "./pages/LoginPage.js";
-// import NoPage from "./pages/NoPage";
+import NoPage from "./pages/NoPage.js";
 
 export default function App() {
   return (
@@ -22,7 +22,7 @@ export default function App() {
           <Route path="books" element={<Books />} />
 
 
-          {/* <Route path="*" element={<NoPage />} /> */}
+          <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

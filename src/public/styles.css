@@ -160,4 +160,5 @@ a:visited {
     align-items: center;
     display: flex;
     justify-content: center;
+    padding-right: 10px;
 }

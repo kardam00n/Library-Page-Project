@@ -12,7 +12,7 @@
 <body>
   <div class="header">
     <div class="menuleft"><a href="/"></a>
-      <div class="logo"><img src="img/book.png"></div><a href="/login">Login</a>
+      <div class="logo"><img src="img/book.png"></div><a href="/login">Login</a><a href="/login">Logout</a>
     </div><a href="/">
       <h1>Biblioteka</h1>
     </a>
@@ -20,12 +20,15 @@
   </div>
   <div class="mainPanel">
     <h1>Login</h1>
-    <form action="/login" method="post" onsubmit="return handleSubmit(event);"><label
-        for="username">Username:</label><input type="text" id="username" name="username" required
-        onchange="handleChange(event)"><br><label for="password">Password:</label><input type="password" id="password"
-        name="password" required onchange="handleChange(event)"><br><input type="submit" value="Login">
-      <p class="error" id="login-error"></p>
+    <form action="/login" method="post" onsubmit="return handleSubmit(event);">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required onchange="handleChange(event)"><br>
+      <label for="password">Password:</label><input type="password" id="password" name="password" required
+        onchange="handleChange(event)"><br>
+      <input type="submit" value="Login">
+
     </form>
+    <p class="error" id="login-error"></p>
     <script>function handleChange(event) {
         const { name, value } = event.target;
         document.getElementById(name).value = value;

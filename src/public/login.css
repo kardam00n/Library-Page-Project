@@ -1,5 +1,5 @@
 .login-form {
-    max-width: 400px;
+    max-width: 600px;
     margin: 0 auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -42,13 +42,8 @@ form input[type="submit"]:hover {
 }
 
 .error {
-    color: #ff0000;
+    color: #ff1919;
     margin-top: 10px;
     text-align: center;
-}
-
-#error-login {
-    color: #ff0000;
-    margin-top: 10px;
-    text-align: center;
+    box-sizing: border-box;
 }

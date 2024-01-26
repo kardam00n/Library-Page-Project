@@ -63,20 +63,29 @@ app.post('/login', async function (req, res, next) {
 
 function checkSignIn(req, res, next) {
     if (req.session.user) {
-        next();  // Якщо сесія існує, перейти до сторінки
+        next();
     } else {
         var err = new Error("Not logged in!");
         console.log(req.session.user);
-        next(err);  // Помилка, спроба доступу до несанкціонованої сторінки!
+        // next(err); // Remove this line
+        return res.redirect('login'); // Redirect directly if not logged in
     }
 }
+
+app.get('/logout', function (req, res) {
+    // Clear the user session
+    req.session.user = null;
+
+    // Redirect to the login page or any other destination
+    res.redirect('/login');
+});
 
 app.get('/', async function (request, response, next) {
     var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
     response.render('mainPage', { 'mainBooks': docs }); // Render the 'index' view
 });
 
-app.get('/books', async function (request, response, next) {
+app.get('/books', checkSignIn, async function (request, response, next) {
     var books = await db.all("SELECT * FROM books", []);
     response.render('booksList', { 'books': books });
 });
@@ -86,7 +95,7 @@ app.post('/updateBookContainer', async function (request, response, next) {
     response.send({ "book": book });
 });
 
-app.post('/rentBooks', checkSignIn, async function (request, response, next) {
+app.post('/rentBooks', async function (request, response, next) {
 
     var rentedBooks = request.body.rentedBooks;
     var error = false;
@@ -150,7 +159,7 @@ app.post('/deleteBookFromBasket', async function (request, response, next) {
     response.send({ 'book': book });
 });
 
-app.get('/rentedBooks', async function (request, response, next) {
+app.get('/rentedBooks', checkSignIn, async function (request, response, next) {
 
     var error = false;
     var errorMSG = '';

@@ -21,7 +21,6 @@ html(lang="pl")
       
     div.mainPanel
       div.errorPanel
-      h1 Akademia Górniczo Hutnicza
       div.bookPanel
         each book in books
           div.bookContainer(id=`book${book.id}` class=(book.no_copies === 0 ? 'noCopies' : ''))

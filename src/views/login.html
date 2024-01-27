@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <div class="header">
+  <!-- <div class="header">
     <div class="menuleft">
       <a href="/">
         <div class="logo"><img src="img/logo-bg.svg"></div>
@@ -19,21 +19,70 @@
       <a href="/rentedBooks">Wypożyczone</a>
     </div>
     <div class="menus"><a href="/login">Login</a><a href="/login">Logout</a></div>
-  </div>
+  </div> -->
   <div class="mainPanel">
     <div class="login-content">
       <img src="img/login.jpg" alt="Login Image">
-      <div class="login-form">
-        <h1>Login</h1>
-        <form action="/login" method="post" onsubmit="return handleSubmit(event);">
-          <label for="username">Username:</label>
-          <input type="text" id="username" name="username" required onchange="handleChange(event)"><br>
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password" required onchange="handleChange(event)"><br>
-          <input type="submit" value="Login">
-        </form>
-        <p class="error" id="login-error"></p>
+      <div class="login-right">
+        <a href="/">
+          <div class="logo"><img src="img/logo-bg.svg"></div>
+        </a>
+        <div class="login-form">
+          <h1>Wellcome to BG AGH!</h1>
+          <form action="/login" method="post" onsubmit="return handleSubmit(event);">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required onchange="handleChange(event)"><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required onchange="handleChange(event)"><br>
+            <input type="submit" value="Login">
+          </form>
+          <p class="error" id="login-error"></p>
+          <script>function handleChange(event) {
+              const { name, value } = event.target;
+              document.getElementById(name).value = value;
+            }
+
+            async function handleSubmit(event) {
+              event.preventDefault();
+
+              const username = document.getElementById('username').value;
+              const password = document.getElementById('password').value;
+
+              try {
+                const response = await fetch('http://localhost:8000/login', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ username, password }),
+                });
+
+                if (response.ok) {
+                  const data = await response.json();
+                  console.log('Login successful:', data);
+                  const errorElement = document.getElementById('login-error');
+                  if (errorElement) {
+                    errorElement.innerText = '';
+                  }
+                  window.location.href = '/';
+                } else {
+                  const errorElement = document.getElementById('login-error');
+                  if (errorElement) {
+                    errorElement.innerText = 'Login failed. Username or password is not correct.';
+                  }
+                  console.error('Login failed. Username or password is not correct.');
+                }
+              } catch (error) {
+                const errorElement = document.getElementById('login-error');
+                if (errorElement) {
+                  errorElement.innerText = 'An error occurred during login. Please try again later.';
+                }
+                console.error('An error occurred during login:', error);
+              }
+            }</script>
+        </div>
       </div>
+
     </div>
   </div>
 </body>

@@ -1,23 +1,49 @@
+body {
+    background-color: white;
+}
+
+.logo {
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+}
+
+.logo img {
+    width: 200px;
+    height: auto
+}
+
 .login-content {
     display: flex;
     justify-content: space-between;
 }
 
 .login-form {
-    max-width: 400px;
+    max-width: 50%;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-right {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+.mainPanel {
+    margin: 0px;
 }
 
 img {
     max-width: 50%;
+    height: auto;
 }
 
 h1 {
     text-align: center;
     color: #333;
+    font-family: 'InterBold';
 }
 
 form {
@@ -26,9 +52,11 @@ form {
 }
 
 label {
-    margin: 10px 0;
-    font-family: 'InterBold';
-    color: #333;
+    margin: 8px 0;
+    font-family: 'InterLight';
+    color: #464646;
+    font-weight: bold;
+    font-size: 14px;
 }
 
 form input {
@@ -46,6 +74,7 @@ form input[type="submit"] {
     border: none;
     border-radius: 6px;
     cursor: pointer;
+    font-size: 16px;
 }
 
 form input[type="submit"]:hover {
@@ -53,8 +82,11 @@ form input[type="submit"]:hover {
 }
 
 .error {
-    color: #ff1919;
+    color: #f42929;
     margin-top: 10px;
     text-align: center;
     box-sizing: border-box;
+    font-family: 'InterLight';
+    font-weight: bold;
+    font-size: 14px;
 }

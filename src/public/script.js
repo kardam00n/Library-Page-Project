@@ -122,18 +122,28 @@ function returnBook(id) {
   xhr.send(JSON.stringify({ "id": id }));
 }
 
+function truncateText(text, maxLength) {
+  if (text.length > maxLength) {
+    return text.slice(0, maxLength - 3) + '...';
+  }
+  return text;
+}
+
 function updateBasket() {
   const basketDiv = document.querySelector('.basketList');
   basketDiv.innerHTML = '';
 
   if (rentedBooks && rentedBooks.length > 0) {
     rentedBooks.forEach((rbook) => {
+      const maxLength = 8;
       var basketContainer = document.createElement('div');
       basketContainer.classList.add("basketContainer");
       var basketimg = document.createElement('img');
       var baskettitle = document.createElement('p');
+      var basketauthor = document.createElement('p');
       basketimg.src = rbook.book.url;
-      baskettitle = rbook.book.title;
+      baskettitle.innerText = truncateText(rbook.book.title, maxLength);
+      basketauthor.innerText = truncateText(rbook.book.author, maxLength);
 
       basketimg.addEventListener('click', function () {
         deleteBook(rbook.book.id);
@@ -143,6 +153,8 @@ function updateBasket() {
       basketCount.innerText = rbook.no_copies;
 
       basketContainer.appendChild(basketimg);
+      basketContainer.appendChild(baskettitle);
+      basketContainer.appendChild(basketauthor);
       basketContainer.appendChild(basketCount);
       basketDiv.appendChild(basketContainer);
     });

@@ -30,7 +30,7 @@ html(lang="pl")
       else
       div.errorPanel
       div.bookPanel
-        h1= "Hello, " + username + "! " + "Books you borrowed:"
+        h1 Books you borrowed:
         each rbook in rentedBooks
           div.bookContainer(id=`book${rbook.book.id}`)
             img.book(src=rbook.book.url, alt=rbook.book.title)

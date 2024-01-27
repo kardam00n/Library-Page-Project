@@ -20,7 +20,7 @@ html(lang="pl")
       div.menus
         a(href="/profile")
           div.profile
-                img(src="img/profile.png")
+              img(src="img/profile.png")
         a(href="/login" class="loginbutton") Log in
       
     div.mainPanel
@@ -36,7 +36,9 @@ html(lang="pl")
                 p Faculty: #{book.faculty}
                 p Field of study: #{book.major}
         div.basket
-            h1 Basket
+            div.basket-row
+              img(src="img/basket.png") 
+              h1 Basket
             div.basketList
               p No books in basket
           

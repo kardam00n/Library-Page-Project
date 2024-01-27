@@ -135,22 +135,22 @@ app.post('/addBookToBasket', async function (request, response, next) {
     var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
     if (!student) {
         error = true;
-        errorMSG = "Podany student nie znajduje się w naszej bazie";
+        errorMSG = "The given student does not exist in the database";
     }
     else {
         var found = await db.get("SELECT * FROM books WHERE id = ?", [id]);
         book = found;
         if (!found) {
             error = true;
-            errorMSG = "Podanej książki nie ma w naszej bazie";
+            errorMSG = "The specified book does not exist in the database";
         }
         else {
             if (found.no_copies <= 0) {
                 error = true;
-                errorMSG = "Brak dostępnych egzemplarzy do wypożyczenia";
+                errorMSG = "No copies available for loan";
             }
             else if (!error) {
-                errorMSG = "Znaleziono: " + String(found.id);
+                errorMSG = "Found: " + String(found.id);
             }
         }
     }

@@ -131,7 +131,9 @@ function updateBasket() {
       var basketContainer = document.createElement('div');
       basketContainer.classList.add("basketContainer");
       var basketimg = document.createElement('img');
+      var baskettitle = document.createElement('p');
       basketimg.src = rbook.book.url;
+      baskettitle = rbook.book.title;
 
       basketimg.addEventListener('click', function () {
         deleteBook(rbook.book.id);
@@ -208,7 +210,7 @@ function updateRentedList() {
       var bookPanel = document.querySelector(".bookPanel");
       bookPanel.innerHTML = '';
       var h = document.createElement('h1');
-      h.innerText = "Wypożyczone przez ciebie książki";
+      h.innerText = "Books you borrowed:";
       bookPanel.appendChild(h);
 
 
@@ -230,19 +232,19 @@ function updateRentedList() {
 
         // Create the book details elements
         const titleParagraph = document.createElement('p');
-        titleParagraph.textContent = `Tytuł: ${rbook.book.title}`;
+        titleParagraph.textContent = `Title: ${rbook.book.title}`;
 
         const authorParagraph = document.createElement('p');
-        authorParagraph.textContent = `Autor: ${rbook.book.author}`;
+        authorParagraph.textContent = `Author: ${rbook.book.author}`;
 
         const copiesParagraph = document.createElement('p');
         copiesParagraph.classList.add('copies');
-        copiesParagraph.textContent = `Liczba wypożyczonych egzemplarzy: ${rbook.no_copies}`;
+        copiesParagraph.textContent = `Number of copies borrowed: ${rbook.no_copies}`;
 
         // Create the return button
         const returnButton = document.createElement('button');
         returnButton.setAttribute('type', 'button');
-        returnButton.textContent = 'Oddaj';
+        returnButton.textContent = 'Give back';
         returnButton.addEventListener('click', () => {
           returnBook(rbook.book.id);
         });

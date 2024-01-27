@@ -32,6 +32,8 @@ app.use(cors());
 
 const firstname = "Jan"
 const lastname = "Kowalski"
+var student_name;
+
 
 /* ******** */
 /* "Routes" */
@@ -62,7 +64,7 @@ app.post('/login', async function (req, res, next) {
         return res.status(401).json({ msg: 'Bad username or password' });
     }
     req.session.user = user;
-
+    student_name = user.username;
     // Passwords match, login is successful
     // You can create a session or JWT token here if needed
     res.json({ token: 'your_access_token' });
@@ -166,17 +168,15 @@ app.post('/deleteBookFromBasket', async function (request, response, next) {
 });
 
 app.get('/rentedBooks', checkSignIn, async function (request, response, next) {
-
     var error = false;
     var errorMSG = '';
-    var rentedBooks = []
+    var rentedBooks = [];
 
     var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
     if (!student) {
         error = true;
-        errorMSG = "Nie znaleziono użytkownika"
-    }
-    else {
+        errorMSG = "Nie znaleziono użytkownika";
+    } else {
         var rents = await db.all("SELECT * FROM rentals WHERE student_id = ?", [student.id]);
         for (let i = 0; i < rents.length; i++) {
             var rental = rents[i];
@@ -201,7 +201,8 @@ app.get('/rentedBooks', checkSignIn, async function (request, response, next) {
             }
         }
     }
-    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks });
+
+    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": student_name });
 });
 
 app.post('/updateRentedList', async function (request, response, next) {

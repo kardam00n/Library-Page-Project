@@ -28,7 +28,7 @@ html(lang="pl")
       else
       div.errorPanel
       div.bookPanel
-        h1 Wypożyczone przez ciebie książki
+        h1= "Cześć, " + username + "! " + "Wypożyczone przez ciebie książki:"
         each rbook in rentedBooks
           div.bookContainer(id=`book${rbook.book.id}`)
             img.book(src=rbook.book.url, alt=rbook.book.title)
@@ -39,7 +39,7 @@ html(lang="pl")
                 button(type="button", onclick=`returnBook('${rbook.book.id}')`) Oddaj
 
     div.stopka       
-        p Kontakt
-        p Telefon: 123 456 789
-        p Adres mailowy: biblio@agh.edu.pl
+      p Kontakt
+      p Telefon: 123 456 789
+      p Adres mailowy: biblio@agh.edu.pl
 

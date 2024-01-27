@@ -104,8 +104,21 @@ a:visited {
     padding-right: 20px;
 }
 
-.menus a {
+/* .profile {
+    margin-left: 20px;
+} */
+
+.profile img {
+    width: 40px;
+    height: auto;
+    padding-top: 10px;
     padding-right: 20px;
+}
+
+.menus {
+    padding-right: 20px;
+    display: flex;
+    align-items: center;
 }
 
 .mainPanel {
@@ -214,4 +227,32 @@ a:visited {
     display: flex;
     justify-content: center;
     padding-right: 10px;
+}
+
+.loginbutton {
+    background-color: #012781;
+    font-family: 'InterLight';
+    color: white;
+    padding: 8px 30px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.loginbutton:hover {
+    background-color: #0839ab;
+}
+
+.loginbutton:visited {
+    color: white;
+}
+
+.header .loginbutton:hover {
+    color: white;
+}
+
+.menus .loginbutton {
+    padding-right: 30px;
 }

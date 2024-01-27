@@ -1,10 +1,14 @@
 doctype html
 html(lang="pl")
+
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
-    link(rel="stylesheet", href="styles.css")      
-    title Strona główna biblioteki AGH
+    link(rel="stylesheet", href="styles.css")
+    link(rel="stylesheet", href="stylesBookList.css")
+    script(src="script.js")
+    title Profil
+
   body
     div.header
       div.menuleft
@@ -18,17 +22,14 @@ html(lang="pl")
           div.profile
                 img(src="img/profile.png")
         a(href="/login" class="loginbutton") Zaloguj się
-      
-    div.mainPanel
-      div.bookPanel
-        each book in mainBooks
-          div.bookContainer
-            p #{book.title}
-            img.book(src=book.url, alt=book.title)
 
+    .mainPanel
+      .errorPanel
+      .bookPanel
+        h1 Nickname: #{username}
+        a(href="/logout" class="loginbutton") Wyloguj się
 
-    div.stopka       
-        p Kontakt
-        p Telefon: 123 456 789
-        p Adres mailowy: biblio@agh.edu.pl
-
+    .stopka
+      p Kontakt
+      p Telefon: 123 456 789
+      p Adres mailowy: biblio@agh.edu.pl

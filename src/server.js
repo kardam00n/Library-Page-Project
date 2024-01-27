@@ -34,7 +34,6 @@ const firstname = "Jan"
 const lastname = "Kowalski"
 var student_name;
 
-
 /* ******** */
 /* "Routes" */
 /* ******** */
@@ -46,7 +45,7 @@ var student_name;
 
 let users = [
     { id: 1, username: 'test', password: bcrypt.hashSync("test", 10), admin: false },
-    { id: 2, username: 'admin', password: bcrypt.hashSync("admin", 10), role: true }
+    { id: 2, username: 'admin', password: bcrypt.hashSync("admin", 10), admin: true }
 ];
 
 app.get('/login', function (req, res, next) {
@@ -86,6 +85,10 @@ app.get('/logout', function (req, res) {
 
     // Redirect to the login page or any other destination
     res.redirect('/login');
+});
+
+app.get('/profile', checkSignIn, async function (request, response, next) {
+    response.render('profile', { "username": student_name });
 });
 
 app.get('/', async function (request, response, next) {

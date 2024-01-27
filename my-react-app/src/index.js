@@ -20,8 +20,6 @@ export default function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="rentedBooks" element={<RentedBooks />} />
           <Route path="books" element={<Books />} />
-
-
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

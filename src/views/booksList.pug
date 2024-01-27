@@ -6,20 +6,22 @@ html(lang="pl")
     link(rel="stylesheet", href="styles.css")
     link(rel="stylesheet", href="stylesBookList.css")  
     script(src="script.js")      
-    title Lista książek
+    title Books list
   body
     div.header
       div.menuleft
         a(href="/")
           div.logo
               img(src="img/logo-bg.svg")
-        a(href="/books") Książki
-        a(href="/rentedBooks") Wypożyczone
+        a(href="/books") Books
+        a(href="/rentedBooks") Borrowed
+        if role === "admin"
+          a(href="/") LibraryManager
       div.menus
         a(href="/profile")
           div.profile
                 img(src="img/profile.png")
-        a(href="/login" class="loginbutton") Zaloguj się
+        a(href="/login" class="loginbutton") Log in
       
     div.mainPanel
       div.errorPanel
@@ -28,20 +30,20 @@ html(lang="pl")
           div.bookContainer(id=`book${book.id}` class=(book.no_copies === 0 ? 'noCopies' : ''))
             img.book(src=book.url, alt=book.title, onclick=`addBook('${book.id}')`)
             div.infoPanel
-                p Tytuł: #{book.title}
-                p Autor: #{book.author}
-                p.copies Liczba wolnych egzemplarzy: #{book.no_copies}
-                p Wydział: #{book.faculty}
-                p Kierunek studiów: #{book.major}
+                p Title: #{book.title}
+                p Author: #{book.author}
+                p.copies Number of available copies: #{book.no_copies}
+                p Faculty: #{book.faculty}
+                p Field of study: #{book.major}
         div.basket
-            h1 Koszyk
+            h1 Basket
             div.basketList
               p No books in basket
           
          
 
-    div.stopka       
-        p Kontakt
-        p Telefon: 123 456 789
-        p Adres mailowy: biblio@agh.edu.pl
+    div.stopka     
+        p Biblioteka Główna Akademii Górniczo-Hutniczej im. Stanisława Staszica w Krakowie
+        p tel. +48 12 617 32 08
+        p e-mail: bgagh@bg.agh.edu.pl
 

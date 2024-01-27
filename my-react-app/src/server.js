@@ -73,20 +73,6 @@ function checkSignIn(req, res, next) {
     }
 }
 
-app.post('/logout', async function (req, res, next) {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    if (username !== user || !bcrypt.compareSync(password, hashed_password)) {
-        return res.status(401).json({ msg: 'Bad username or password' });
-    }
-    var newUser = { id: req.body.username, password: req.body.password };
-    req.session.user = newUser;
-    // Passwords match, login is successful
-    // You can create a session or JWT token here if needed
-    res.json({ token: 'your_access_token' });
-});
-
 app.get('/logout', function (req, res) {
     // Clear the user session
     req.session.user = null;

@@ -7,40 +7,41 @@ html(lang="pl")
     link(rel="stylesheet", href="stylesBookList.css")
     script(src="script.js") 
   
-    title Wypożyczenie książki
+    title Rented books
   body
     div.header
       div.menuleft
         a(href="/")
           div.logo
               img(src="img/logo-bg.svg")
-        a(href="/books") Książki
-        a(href="/rentedBooks") Wypożyczone
+        a(href="/books") Books
+        a(href="/rentedBooks") Borrowed
+        if role === "admin"
+          a(href="/") LibraryManager
       div.menus
         a(href="/profile")
           div.profile
                 img(src="img/profile.png")
-        a(href="/login" class="loginbutton") Zaloguj się
+        a(href="/login" class="loginbutton") Log in
       
     div.mainPanel
-      h1 Akademia Górniczo Hutnicza
       if error
         h2 #{errorMSG}
       else
       div.errorPanel
       div.bookPanel
-        h1= "Cześć, " + username + "! " + "Wypożyczone przez ciebie książki:"
+        h1= "Hello, " + username + "! " + "Books you borrowed:"
         each rbook in rentedBooks
           div.bookContainer(id=`book${rbook.book.id}`)
             img.book(src=rbook.book.url, alt=rbook.book.title)
             div.infoPanel
-                p Tytuł: #{rbook.book.title}
-                p Autor: #{rbook.book.author}
-                p.copies Liczba wypożyczonych egzemplarzy: #{rbook.no_copies}
-                button(type="button", onclick=`returnBook('${rbook.book.id}')`) Oddaj
+                p Title: #{rbook.book.title}
+                p Author: #{rbook.book.author}
+                p.copies Number of copies borrowed: #{rbook.no_copies}
+                button(type="button", onclick=`returnBook('${rbook.book.id}')`) Give back
 
-    div.stopka       
-      p Kontakt
-      p Telefon: 123 456 789
-      p Adres mailowy: biblio@agh.edu.pl
+    div.stopka     
+        p Biblioteka Główna Akademii Górniczo-Hutniczej im. Stanisława Staszica w Krakowie
+        p tel. +48 12 617 32 08
+        p e-mail: bgagh@bg.agh.edu.pl
 

@@ -7,7 +7,7 @@ html(lang="pl")
     link(rel="stylesheet", href="styles.css")
     link(rel="stylesheet", href="stylesBookList.css")
     script(src="script.js")
-    title Profil
+    title Profile
 
   body
     div.header
@@ -15,20 +15,22 @@ html(lang="pl")
         a(href="/")
           div.logo
               img(src="img/logo-bg.svg")
-        a(href="/books") Książki
-        a(href="/rentedBooks") Wypożyczone
+        a(href="/books") Books
+        a(href="/rentedBooks") Borrowed
+        if role === "admin"
+          a(href="/") LibraryManager
       div.menus
         a(href="/profile")
           div.profile
                 img(src="img/profile.png")
-        a(href="/login" class="loginbutton") Zaloguj się
+        a(href="/login" class="loginbutton") Log in
     .userPanel
         img(src="img/user.jpg")
         h2 Nickname: #{username}
         h2 Role: #{role}
-        a(href="/logout" class="loginbutton") Wyloguj się
+        a(href="/logout" class="loginbutton") Log out
 
-    .stopka
-      p Kontakt
-      p Telefon: 123 456 789
-      p Adres mailowy: biblio@agh.edu.pl
+    div.stopka     
+        p Biblioteka Główna Akademii Górniczo-Hutniczej im. Stanisława Staszica w Krakowie
+        p tel. +48 12 617 32 08
+        p e-mail: bgagh@bg.agh.edu.pl

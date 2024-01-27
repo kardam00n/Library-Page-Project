@@ -91,12 +91,12 @@ app.get('/profile', checkSignIn, async function (request, response, next) {
 
 app.get('/', async function (request, response, next) {
     var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
-    response.render('mainPage', { 'mainBooks': docs }); // Render the 'index' view
+    response.render('mainPage', { 'mainBooks': docs, 'user': request.session.user }); // Render the 'index' view
 });
 
 app.get('/books', checkSignIn, async function (request, response, next) {
     var books = await db.all("SELECT * FROM books", []);
-    response.render('booksList', { 'books': books });
+    response.render('booksList', { 'books': books, "role": request.session.user.role });
 });
 
 app.post('/updateBookContainer', async function (request, response, next) {
@@ -203,7 +203,7 @@ app.get('/rentedBooks', checkSignIn, async function (request, response, next) {
         }
     }
 
-    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": request.session.user.username });
+    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": request.session.user.username, "role": request.session.user.role });
 });
 
 app.post('/updateRentedList', async function (request, response, next) {

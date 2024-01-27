@@ -1,3 +1,44 @@
+@font-face {
+    font-family: 'InterThin';
+    src: url('../fonts/InterThin.eot');
+    src: url('../fonts/InterThin.eot') format('embedded-opentype'),
+        url('../fonts/InterThin.woff2') format('woff2'),
+        url('../fonts/InterThin.woff') format('woff'),
+        url('../fonts/InterThin.ttf') format('truetype'),
+        url('../fonts/InterThin.svg#InterThin') format('svg');
+}
+
+@font-face {
+    font-family: 'InterBold';
+    src: url('../fonts/InterBold.eot');
+    src: url('../fonts/InterBold.eot') format('embedded-opentype'),
+        url('../fonts/InterBold.woff2') format('woff2'),
+        url('../fonts/InterBold.woff') format('woff'),
+        url('../fonts/InterBold.ttf') format('truetype'),
+        url('../fonts/InterBold.svg#InterBold') format('svg');
+}
+
+@font-face {
+    font-family: 'InterLight';
+    src: url('../fonts/InterLight.eot');
+    src: url('../fonts/InterLight.eot') format('embedded-opentype'),
+        url('../fonts/InterLight.woff2') format('woff2'),
+        url('../fonts/InterLight.woff') format('woff'),
+        url('../fonts/InterLight.ttf') format('truetype'),
+        url('../fonts/InterLight.svg#InterLight') format('svg');
+}
+
+@font-face {
+    font-family: 'Inter-LightItalic';
+    src: url('../fonts/Inter-LightItalic.eot');
+    src: url('../fonts/Inter-LightItalic.eot') format('embedded-opentype'),
+        url('../fonts/Inter-LightItalic.woff2') format('woff2'),
+        url('../fonts/Inter-LightItalic.woff') format('woff'),
+        url('../fonts/Inter-LightItalic.ttf') format('truetype'),
+        url('../fonts/Inter-LightItalic.svg#Inter-LightItalic') format('svg');
+}
+
+
 @keyframes example {
     from {
         transform: rotate(0);
@@ -21,7 +62,8 @@
 body {
     display: flex;
     flex-direction: column;
-    margin: 0
+    margin: 0;
+    background-color: rgb(242, 243, 246);
 }
 
 a {
@@ -37,10 +79,16 @@ a:visited {
     height: 50px;
     width: 100%;
     display: flex;
-    background-color: lightgrey;
+    background-color: #fff;
+    /* Замінив rgb(255, 255, 255) на простий #fff */
     margin: 0;
     justify-content: space-between;
     align-items: center;
+    font-family: 'InterLight';
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Додав тінь */
+    border-radius: 10px;
+    /* Додав закруглення кутів */
 }
 
 .logo {
@@ -48,8 +96,9 @@ a:visited {
 }
 
 .logo img {
-    width: 40px;
+    width: 100px;
     height: auto;
+    padding-top: 10px;
     padding-right: 20px;
 }
 

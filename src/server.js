@@ -45,8 +45,8 @@ var student_name;
 // });
 
 let users = [
-    { id: 1, username: 'test', password: bcrypt.hashSync("test", 10), role: 'user' },
-    { id: 2, username: 'admin', password: bcrypt.hashSync("admin", 10), role: 'admin' }
+    { id: 1, username: 'test', password: bcrypt.hashSync("test", 10), admin: false },
+    { id: 2, username: 'admin', password: bcrypt.hashSync("admin", 10), role: true }
 ];
 
 app.get('/login', function (req, res, next) {

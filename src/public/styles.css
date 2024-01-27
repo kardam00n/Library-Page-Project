@@ -104,10 +104,6 @@ a:visited {
     padding-right: 20px;
 }
 
-/* .profile {
-    margin-left: 20px;
-} */
-
 .profile img {
     width: 40px;
     height: auto;
@@ -255,4 +251,24 @@ a:visited {
 
 .menus .loginbutton {
     padding-right: 30px;
+}
+
+.userPanel {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'InterLight';
+    font-size: 14px;
+}
+
+.userPanel img {
+    height: 300px;
+    width: auto;
+    margin-bottom: 20px;
+}
+
+.userPanel h2 {
+    margin-top: 0px;
+    margin-bottom: 10px;
 }

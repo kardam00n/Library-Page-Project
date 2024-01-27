@@ -22,11 +22,10 @@ html(lang="pl")
           div.profile
                 img(src="img/profile.png")
         a(href="/login" class="loginbutton") Zaloguj się
-
-    .mainPanel
-      .errorPanel
-      .bookPanel
-        h1 Nickname: #{username}
+    .userPanel
+        img(src="img/user.jpg")
+        h2 Nickname: #{username}
+        h2 Role: #{role}
         a(href="/logout" class="loginbutton") Wyloguj się
 
     .stopka

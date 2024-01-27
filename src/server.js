@@ -32,7 +32,6 @@ app.use(cors());
 
 const firstname = "Jan"
 const lastname = "Kowalski"
-var student_name;
 
 /* ******** */
 /* "Routes" */
@@ -44,8 +43,8 @@ var student_name;
 // });
 
 let users = [
-    { id: 1, username: 'test', password: bcrypt.hashSync("test", 10), admin: false },
-    { id: 2, username: 'admin', password: bcrypt.hashSync("admin", 10), admin: true }
+    { id: 1, username: 'test', password: bcrypt.hashSync("test", 10), role: 'user' },
+    { id: 2, username: 'admin', password: bcrypt.hashSync("admin", 10), role: 'admin' }
 ];
 
 app.get('/login', function (req, res, next) {
@@ -63,7 +62,6 @@ app.post('/login', async function (req, res, next) {
         return res.status(401).json({ msg: 'Bad username or password' });
     }
     req.session.user = user;
-    student_name = user.username;
     // Passwords match, login is successful
     // You can create a session or JWT token here if needed
     res.json({ token: 'your_access_token' });
@@ -88,7 +86,7 @@ app.get('/logout', function (req, res) {
 });
 
 app.get('/profile', checkSignIn, async function (request, response, next) {
-    response.render('profile', { "username": student_name });
+    response.render('profile', { "username": request.session.user.username, "role": request.session.user.role });
 });
 
 app.get('/', async function (request, response, next) {
@@ -205,7 +203,7 @@ app.get('/rentedBooks', checkSignIn, async function (request, response, next) {
         }
     }
 
-    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": student_name });
+    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": request.session.user.username });
 });
 
 app.post('/updateRentedList', async function (request, response, next) {

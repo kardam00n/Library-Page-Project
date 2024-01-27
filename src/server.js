@@ -42,22 +42,27 @@ const lastname = "Kowalski"
 //     response.sendFile(path.join(__dirname, 'views', 'mainPage.html'));
 // });
 
-const user = "test";
-const hashed_password = bcrypt.hashSync("test", 10); // Hash the password (adjust the saltRounds as needed)
+let users = [
+    { id: 1, username: 'test', password: bcrypt.hashSync("test", 10), role: 'user' },
+    { id: 2, username: 'admin', password: bcrypt.hashSync("admin", 10), role: 'admin' }
+];
 
 app.get('/login', function (req, res, next) {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
 app.post('/login', async function (req, res, next) {
-    const username = req.body.username;
-    const password = req.body.password;
+    const { username, password } = req.body;
 
-    if (username !== user || !bcrypt.compareSync(password, hashed_password)) {
+    const user = users.find(
+        (u) => u.username === username
+    );
+
+    if (!user || !bcrypt.compareSync(password, user.password)) {
         return res.status(401).json({ msg: 'Bad username or password' });
     }
-    var newUser = { id: req.body.username, password: req.body.password };
-    req.session.user = newUser;
+    req.session.user = user;
+
     // Passwords match, login is successful
     // You can create a session or JWT token here if needed
     res.json({ token: 'your_access_token' });

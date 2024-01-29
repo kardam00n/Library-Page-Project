@@ -12,9 +12,10 @@ html(lang="pl")
           div.logo
               img(src="img/logo-bg.svg")
         a(href="/books") Books
-        a(href="/rentedBooks") Borrowed
         if user && user.role == 'admin'
-          a(href="/") LibraryManager
+          a(href="/returned") LibraryManager
+        else
+          a(href="/rentedBooks") Borrowed
       div.menus
         if user
           a(href="/profile")

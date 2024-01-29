@@ -14,9 +14,10 @@ html(lang="pl")
           div.logo
               img(src="img/logo-bg.svg")
         a(href="/books") Books
-        a(href="/rentedBooks") Borrowed
-        if role === "admin"
-          a(href="/") LibraryManager
+        if role == 'admin'
+          a(href="/returned") LibraryManager
+        else
+          a(href="/rentedBooks") Borrowed
       div.menus
         a(href="/profile")
           div.profile
@@ -28,20 +29,23 @@ html(lang="pl")
         each book in books
           div.bookContainer(id=`book${book.id}` class=(book.no_copies === 0 ? 'noCopies' : ''))
             div.lbook
-                img(src=book.url, alt=book.title, onclick=`addBook('${book.id}')`)
-            //- img.book(src=book.url, alt=book.title, onclick=`addBook('${book.id}')` )
+                if role == 'user'
+                  img(src=book.url, alt=book.title, onclick=`addBook('${book.id}')`)
+                else
+                  img(src=book.url, alt=book.title)
             div.infoPanel
                 p Title: #{book.title}
                 p Author: #{book.author}
                 p.copies Number of available copies: #{book.no_copies}
                 p Faculty: #{book.faculty}
                 p Field of study: #{book.major}
-        div.basket
-            div.basket-row
-              img(src="img/basket.png") 
-              h1 Basket
-            div.basketList
-              p No books in basket
+        if role == 'user'
+          div.basket
+              div.basket-row
+                img(src="img/basket.png") 
+                h1 Basket
+              div.basketList
+                p No books in basket
           
          
 

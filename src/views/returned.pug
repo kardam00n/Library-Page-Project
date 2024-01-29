@@ -4,33 +4,40 @@ html(lang="pl")
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1")
     link(rel="stylesheet", href="styles.css")
+    link(rel="stylesheet", href="stylesBookList.css")
 
-    title Zwrot książki
+    title LibraryManager
   body
     div.header
       div.menuleft
         a(href="/")
-        div.logo
-            img(src="img/logo-bg.svg")
-            a(href="/books") Książki
-      a(href="/")
-        h1 Biblioteka
+          div.logo
+              img(src="img/logo-bg.svg")
+        a(href="/books") Books
+        if role == 'admin'
+          a(href="/returned") LibraryManager
+        else
+          a(href="/rentedBooks") Borrowed
       div.menus
-        a(href="/login") Login
-        a(href="/logout") Logout
+        a(href="/profile")
+          div.profile
+              img(src="img/profile.png")
       
     div.mainPanel
-      h1 Akademia Górniczo Hutnicza
       if error
         h2 #{errorMSG}
       else
-        h2 Książka #{title} została zwrócona
-        p Student: #{firstname} #{lastname}
-        a(href="/")
-            h1 POWRÓT 
-          
-          
-         
+        h2 All borrowed books:
+        each rbook in rentedBooks
+          div.bookContainer(id=`book${rbook.book.id}`)
+            div.lbook
+                img(src=rbook.book.url, alt=rbook.book.title)
+            div.infoPanel
+                p Student: #{rbook.student}
+                p Title: #{rbook.book.title}
+                p Author: #{rbook.book.author}
+                p.copies Number of copies borrowed: #{rbook.no_copies}
+        
 
     div.stopka     
         p Biblioteka Główna Akademii Górniczo-Hutniczej im. Stanisława Staszica w Krakowie

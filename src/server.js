@@ -103,6 +103,26 @@ function checkSignIn(req, res, next) {
     }
 }
 
+function checkAdminRole(req, res, next) {
+    if (req.session.user.role == 'admin') {
+        next();
+    } else {
+        var err = new Error("Not allowed!");
+        console.log(req.session.user);
+        return res.redirect('/');
+    }
+}
+
+function checkUserRole(req, res, next) {
+    if (req.session.user.role == 'user') {
+        next();
+    } else {
+        var err = new Error("This is user function!");
+        console.log(req.session.user);
+        return res.redirect('/');
+    }
+}
+
 app.get('/logout', function (req, res) {
     // Clear the user session
     req.session.user = null;
@@ -194,7 +214,7 @@ app.post('/deleteBookFromBasket', async function (request, response, next) {
     response.send({ 'book': book });
 });
 
-app.get('/rentedBooks', checkSignIn, async function (request, response, next) {
+app.get('/rentedBooks', checkSignIn, checkUserRole, async function (request, response, next) {
     var error = false;
     var errorMSG = '';
     var rentedBooks = [];
@@ -300,6 +320,42 @@ app.post('/returnBook', async function (request, response, next) {
         }
     }
     response.send({ "error": error, "errorMSG": errorMSG, "id": id });
+});
+
+
+app.get('/returned', checkSignIn, checkAdminRole, async function (request, response, next) {
+    var error = false;
+    var errorMSG = '';
+    var rentedBooks = [];
+
+    var student = await db.get("SELECT * FROM students");
+    var rents = await db.all("SELECT * FROM rentals");
+    for (let i = 0; i < rents.length; i++) {
+        var rental = rents[i];
+        var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
+        if (rentedBooks.length === 0) {
+            var newPos = {
+                'student': firstname + ' ' + lastname,
+                'book': book,
+                'no_copies': 1,
+            };
+            rentedBooks.push(newPos);
+        } else {
+            const foundBook = rentedBooks.find(obj => obj.book.id === book.id);
+            if (foundBook) {
+                foundBook.no_copies += 1;
+            } else {
+                var newPos = {
+                    'student': firstname + ' ' + lastname,
+                    'book': book,
+                    'no_copies': 1,
+                };
+                rentedBooks.push(newPos);
+            }
+        }
+    }
+
+    response.render('returned', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": request.session.user.username, "role": request.session.user.role });
 });
 
 /* ************************************************ */

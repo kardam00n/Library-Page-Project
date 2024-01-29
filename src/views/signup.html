@@ -49,6 +49,7 @@
 
                             const username = document.getElementById('username').value;
                             const password = document.getElementById('password').value;
+                            const email = document.getElementById('email').value;
 
                             try {
                                 const response = await fetch('http://localhost:8000/signup', {
@@ -56,7 +57,7 @@
                                     headers: {
                                         'Content-Type': 'application/json',
                                     },
-                                    body: JSON.stringify({ username, password }),
+                                    body: JSON.stringify({ username, password, email }),
                                 });
 
                                 if (response.ok) {
@@ -70,9 +71,9 @@
                                 } else {
                                     const errorElement = document.getElementById('login-error');
                                     if (errorElement) {
-                                        errorElement.innerText = 'Signup failed. User with this nick already exists';
+                                        errorElement.innerText = 'Signup failed. User with this username already exists';
                                     }
-                                    console.error('Signup failed. User with this nick already exists');
+                                    console.error('Signup failed. User with this username already exists');
                                 }
                             } catch (error) {
                                 const errorElement = document.getElementById('login-error');

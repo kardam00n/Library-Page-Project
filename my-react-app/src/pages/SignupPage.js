@@ -36,8 +36,8 @@ const SignUp = () => {
                 window.location.href = '/login';
             } else {
                 const errorData = await response.json();
-                setErrorMessage(`Signup failed. ${errorData.message}`);
-                console.error(`Signup failed. ${errorData.message}`);
+                setErrorMessage(`Signup failed. User with this nick already exists`);
+                console.error(`Signup failed. User with this nick already exists`);
             }
         } catch (error) {
             setErrorMessage('An error occurred during signup. Please try again later.');

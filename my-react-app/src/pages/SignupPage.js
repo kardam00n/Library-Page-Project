@@ -6,6 +6,7 @@ import logo from '../img/logo-bg.svg';
 const SignUp = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleChange = (event) => {
@@ -14,6 +15,8 @@ const SignUp = () => {
             setUsername(value);
         } else if (name === 'password') {
             setPassword(value);
+        } else if (name === 'email') {
+            setEmail(value);
         }
     };
 
@@ -26,7 +29,7 @@ const SignUp = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ username, password, email }),
             });
 
             if (response.ok) {
@@ -36,8 +39,8 @@ const SignUp = () => {
                 window.location.href = '/login';
             } else {
                 const errorData = await response.json();
-                setErrorMessage(`Signup failed. ${errorData.message}`);
-                console.error(`Signup failed. ${errorData.message}`);
+                setErrorMessage(`Signup failed. User with this nick already exists`);
+                console.error(`Signup failed. User with this nick already exists`);
             }
         } catch (error) {
             setErrorMessage('An error occurred during signup. Please try again later.');

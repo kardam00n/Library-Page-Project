@@ -49,10 +49,7 @@ app.get('/signup', function (req, res, next) {
 });
 
 app.post('/signup', async function (req, res, next) {
-    // const { username, password } = req.body;
-    // const maxId = Math.max(...users.map(user => user.id));
     const newUser = {
-        // id: maxId + 1,
         username: req.body.username,
         password: bcrypt.hashSync(req.body.password, 10),
         email: req.body.email
@@ -64,7 +61,7 @@ app.post('/signup', async function (req, res, next) {
         return res.status(401).json({ msg: 'User with this nick already exists' });
     }
 
-    // users.push(newUser);
+
     await db.run("INSERT INTO students (username, password, email) VALUES (?, ?, ?)", [newUser.username, newUser.password, newUser.email]);
     res.json({ token: 'your_access_token' });
 

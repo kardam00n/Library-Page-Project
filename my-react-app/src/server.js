@@ -30,9 +30,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(session({ secret: "Your secret key" }));
 app.use(cors());
 
-const firstname = "Jan"
-const lastname = "Kowalski"
-
 /* ******** */
 /* "Routes" */
 /* ******** */
@@ -42,43 +39,47 @@ const lastname = "Kowalski"
 //     response.sendFile(path.join(__dirname, 'views', 'mainPage.html'));
 // });
 
-let users = [
-    { id: 1, username: 'test', password: bcrypt.hashSync("123456", 10), role: 'user' },
-    { id: 2, username: 'admin', password: bcrypt.hashSync("123456", 10), role: 'admin' }
-];
+// let users = [
+//     { id: 1, username: 'test', password: bcrypt.hashSync("123456", 10), role: 'user' },
+//     { id: 2, username: 'admin', password: bcrypt.hashSync("123456", 10), role: 'admin' }
+// ];
+
+app.get('/signup', function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'views', 'signup.html'));
+});
 
 app.post('/signup', async function (req, res, next) {
-    // const { username, password } = req.body;
-    const maxId = Math.max(...users.map(user => user.id));
     const newUser = {
-        id: maxId + 1,
         username: req.body.username,
         password: bcrypt.hashSync(req.body.password, 10),
-        role: 'user'
+        email: req.body.email
     };
-    const user = users.find(
-        (u) => u.username === req.body.username
-    );
+
+    var user = await db.get("SELECT * FROM students WHERE username = ?", [newUser.username]);
 
     if (user) {
         return res.status(401).json({ msg: 'User with this nick already exists' });
     }
 
-    users.push(newUser);
+
+    await db.run("INSERT INTO students (username, password, email) VALUES (?, ?, ?)", [newUser.username, newUser.password, newUser.email]);
     res.json({ token: 'your_access_token' });
 
+});
+
+app.get('/login', function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
 
 app.post('/login', async function (req, res, next) {
     const { username, password } = req.body;
 
-    const user = users.find(
-        (u) => u.username === username
-    );
+    var user = await db.get("SELECT * FROM students WHERE username = ?", [username]);
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
         return res.status(401).json({ msg: 'Bad username or password' });
     }
+
     req.session.user = user;
     // Passwords match, login is successful
     // You can create a session or JWT token here if needed
@@ -148,7 +149,7 @@ app.post('/rentBooks', async function (request, response, next) {
     var error = false;
     var errorMSG = '';
 
-    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
+    var student = await db.get("SELECT * FROM students WHERE username = ?", [request.session.user.username]);
     if (student) {
         for (const rbook of rentedBooks) {
             var book = rbook.book;
@@ -170,7 +171,7 @@ app.post('/addBookToBasket', async function (request, response, next) {
     var errorMSG = '';
     var book = null;
 
-    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
+    var student = await db.get("SELECT * FROM students WHERE  username = ?", [request.session.user.username]);
     if (!student) {
         error = true;
         errorMSG = "The given student does not exist in the database";
@@ -211,7 +212,7 @@ app.get('/rentedBooks', checkSignIn, checkUserRole, async function (request, res
     var errorMSG = '';
     var rentedBooks = [];
 
-    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
+    var student = await db.get("SELECT * FROM students WHERE username = ?", [request.session.user.username]);
     if (!student) {
         error = true;
         errorMSG = "Nie znaleziono użytkownika";
@@ -249,7 +250,7 @@ app.post('/updateRentedList', async function (request, response, next) {
     var errorMSG = '';
     var rentedBooks = [];
 
-    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
+    var student = await db.get("SELECT * FROM students WHERE username = ?", [request.session.user.username]);
     if (!student) {
         error = true;
         errorMSG = "Nie znaleziono użytkownika"
@@ -287,7 +288,7 @@ app.post('/returnBook', async function (request, response, next) {
     var errorMSG = '';
 
     var id = parseInt(request.body.id);
-    var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
+    var student = await db.get("SELECT * FROM students WHERE username = ?", [request.session.user.username]);
     if (!student) {
         error = true;
         errorMSG = "Podany student nie znajduje się w naszej bazie";
@@ -320,29 +321,38 @@ app.get('/returned', checkSignIn, checkAdminRole, async function (request, respo
     var errorMSG = '';
     var rentedBooks = [];
 
-    var student = await db.get("SELECT * FROM students");
     var rents = await db.all("SELECT * FROM rentals");
-    for (let i = 0; i < rents.length; i++) {
-        var rental = rents[i];
-        var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
-        if (rentedBooks.length === 0) {
-            var newPos = {
-                'student': firstname + ' ' + lastname,
-                'book': book,
-                'no_copies': 1,
-            };
-            rentedBooks.push(newPos);
-        } else {
-            const foundBook = rentedBooks.find(obj => obj.book.id === book.id);
-            if (foundBook) {
-                foundBook.no_copies += 1;
-            } else {
-                var newPos = {
-                    'student': firstname + ' ' + lastname,
-                    'book': book,
-                    'no_copies': 1,
-                };
-                rentedBooks.push(newPos);
+    var students = await db.all("SELECT * FROM students");
+
+    for (let j = 0; j < students.length; j++) {
+        for (let i = 0; i < rents.length; i++) {
+            var rental = rents[i];
+            var student = students[j];
+            if (rental.student_id === student.id) {
+                var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
+                // var st = await db.get("SELECT * FROM students WHERE id = ?", [rental.student_id]);
+                console.log(book);
+
+                if (rentedBooks.length === 0) {
+                    var newPos = {
+                        'student': student,
+                        'book': book,
+                        'no_copies': 1,
+                    };
+                    rentedBooks.push(newPos);
+                } else {
+                    const foundBook = rentedBooks.find(obj => obj.book.id === book.id && obj.student.id == student.id);
+                    if (foundBook) {
+                        foundBook.no_copies += 1;
+                    } else {
+                        var newPos = {
+                            'student': student,
+                            'book': book,
+                            'no_copies': 1,
+                        };
+                        rentedBooks.push(newPos);
+                    }
+                }
             }
         }
     }

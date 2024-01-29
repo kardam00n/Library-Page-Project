@@ -1,6 +1,5 @@
 import React from 'react';
 import user from '../img/user.jpg';
-
 const ProfilePage = ({ username, role }) => {
     return (
         <div>

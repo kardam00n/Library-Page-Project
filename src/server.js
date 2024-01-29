@@ -58,8 +58,7 @@ app.post('/signup', async function (req, res, next) {
         // id: maxId + 1,
         username: req.body.username,
         password: bcrypt.hashSync(req.body.password, 10),
-        email: req.body.email,
-        role: 'user'
+        email: req.body.email
     };
 
     var user = await db.get("SELECT * FROM students WHERE username = ?", [newUser.username]);
@@ -83,15 +82,10 @@ app.post('/login', async function (req, res, next) {
 
     var user = await db.get("SELECT * FROM students WHERE username = ?", [username]);
 
-    if (!user) {
-        return res.status(401).json({ msg: 'Bad username' });
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+        return res.status(401).json({ msg: 'Bad username or password' });
     }
 
-    var user_password = await db.get("RETURN @(SELECT password FROM students WHERE username = ?)", [username]);
-    console.log(user.password);
-    if (!bcrypt.compareSync(password, toString(user.password))) {
-        return res.status(401).json({ msg: 'Bad password' });
-    }
     req.session.user = user;
     // Passwords match, login is successful
     // You can create a session or JWT token here if needed
@@ -338,9 +332,10 @@ app.get('/returned', checkSignIn, checkAdminRole, async function (request, respo
     for (let i = 0; i < rents.length; i++) {
         var rental = rents[i];
         var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
+        var st = await db.get("SELECT * FROM students WHERE id = ?", [rental.student_id]);
         if (rentedBooks.length === 0) {
             var newPos = {
-                'student': firstname + ' ' + lastname,
+                'student': st,
                 'book': book,
                 'no_copies': 1,
             };
@@ -351,7 +346,7 @@ app.get('/returned', checkSignIn, checkAdminRole, async function (request, respo
                 foundBook.no_copies += 1;
             } else {
                 var newPos = {
-                    'student': firstname + ' ' + lastname,
+                    'student': st,
                     'book': book,
                     'no_copies': 1,
                 };

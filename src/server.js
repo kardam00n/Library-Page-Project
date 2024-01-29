@@ -327,30 +327,38 @@ app.get('/returned', checkSignIn, checkAdminRole, async function (request, respo
     var errorMSG = '';
     var rentedBooks = [];
 
-    var student = await db.get("SELECT * FROM students");
     var rents = await db.all("SELECT * FROM rentals");
-    for (let i = 0; i < rents.length; i++) {
-        var rental = rents[i];
-        var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
-        var st = await db.get("SELECT * FROM students WHERE id = ?", [rental.student_id]);
-        if (rentedBooks.length === 0) {
-            var newPos = {
-                'student': st,
-                'book': book,
-                'no_copies': 1,
-            };
-            rentedBooks.push(newPos);
-        } else {
-            const foundBook = rentedBooks.find(obj => obj.book.id === book.id);
-            if (foundBook) {
-                foundBook.no_copies += 1;
-            } else {
-                var newPos = {
-                    'student': st,
-                    'book': book,
-                    'no_copies': 1,
-                };
-                rentedBooks.push(newPos);
+    var students = await db.all("SELECT * FROM students");
+
+    for (let j = 0; j < students.length; j++) {
+        for (let i = 0; i < rents.length; i++) {
+            var rental = rents[i];
+            var student = students[j];
+            if (rental.student_id === student.id) {
+                var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
+                // var st = await db.get("SELECT * FROM students WHERE id = ?", [rental.student_id]);
+                console.log(book);
+
+                if (rentedBooks.length === 0) {
+                    var newPos = {
+                        'student': student,
+                        'book': book,
+                        'no_copies': 1,
+                    };
+                    rentedBooks.push(newPos);
+                } else {
+                    const foundBook = rentedBooks.find(obj => obj.book.id === book.id && obj.student.id == student.id);
+                    if (foundBook) {
+                        foundBook.no_copies += 1;
+                    } else {
+                        var newPos = {
+                            'student': student,
+                            'book': book,
+                            'no_copies': 1,
+                        };
+                        rentedBooks.push(newPos);
+                    }
+                }
             }
         }
     }

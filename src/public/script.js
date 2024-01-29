@@ -211,7 +211,6 @@ function updateBookContainer(book) {
 function updateRentedList() {
   const xhr = new XMLHttpRequest();
 
-
   xhr.addEventListener("load", function (evt) {
     var response = JSON.parse(xhr.responseText);
     if (response.error) {

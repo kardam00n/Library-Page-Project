@@ -22,7 +22,6 @@ html(lang="pl")
         a(href="/profile")
           div.profile
                 img(src="img/profile.png")
-        a(href="/login" class="loginbutton") Log in
       
     div.mainPanel
       if error
@@ -33,7 +32,7 @@ html(lang="pl")
         h1 Books you borrowed:
         each rbook in rentedBooks
           div.bookContainer(id=`book${rbook.book.id}`)
-            div.book
+            div.lbook
                 img(src=rbook.book.url, alt=rbook.book.title)
             div.infoPanel
                 p Title: #{rbook.book.title}

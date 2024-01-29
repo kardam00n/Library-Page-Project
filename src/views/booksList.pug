@@ -21,14 +21,15 @@ html(lang="pl")
         a(href="/profile")
           div.profile
               img(src="img/profile.png")
-        a(href="/login" class="loginbutton") Log in
       
     div.mainPanel
       div.errorPanel
       div.bookPanel
         each book in books
           div.bookContainer(id=`book${book.id}` class=(book.no_copies === 0 ? 'noCopies' : ''))
-            img.book(src=book.url, alt=book.title, onclick=`addBook('${book.id}')`)
+            div.lbook
+                img(src=book.url, alt=book.title, onclick=`addBook('${book.id}')`)
+            //- img.book(src=book.url, alt=book.title, onclick=`addBook('${book.id}')` )
             div.infoPanel
                 p Title: #{book.title}
                 p Author: #{book.author}

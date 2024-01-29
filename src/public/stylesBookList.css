@@ -57,7 +57,7 @@
     border-radius: 10px;
 }
 
-.bookContainer .book {
+.bookContainer .lbook {
     max-width: 65%;
     display: flex;
     justify-content: center;

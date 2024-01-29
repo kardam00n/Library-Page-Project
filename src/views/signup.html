@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="login.css">
+    <title>Sign up</title>
+</head>
+
+<body>
+    <div class="mainPanel">
+        <div class="login-content">
+            <img src="img/signup.jpg" alt="Sign up Image">
+            <div class="login-right">
+                <a href="/">
+                    <div class="logo"><img src="img/logo-bg.svg"></div>
+                </a>
+                <div class="login-form">
+                    <h1>Wellcome to BG AGH!</h1>
+                    <form action="/signup" method="post" onsubmit="return handleSubmit(event);">
+                        <label for="username">Email:</label>
+                        <input type="email" id="email" name="email"><br>
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" minlength="4" maxlength="20" required
+                            onchange="handleChange(event)"><br>
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" minlength="6" maxlength="20" required
+                            onchange="handleChange(event)"><br>
+                        <div class="check">
+                            <input type="checkbox" id="myCheckbox" name="myCheckbox">
+                            <p>I do not wish to receive news and promotions from Freepik Company by email.</p>
+                        </div>
+                        <input type="submit" value="Sign up">
+                    </form>
+                    <p class="error" id="login-error"></p>
+                    <div class="sign">
+                        <p>Already have an account?</p>
+                        <a href="/signup">Log in</a>
+                    </div>
+                    <script>function handleChange(event) {
+                            const { name, value } = event.target;
+                            document.getElementById(name).value = value;
+                        }
+
+                        async function handleSubmit(event) {
+                            event.preventDefault();
+
+                            const username = document.getElementById('username').value;
+                            const password = document.getElementById('password').value;
+
+                            try {
+                                const response = await fetch('http://localhost:8000/signup', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({ username, password }),
+                                });
+
+                                if (response.ok) {
+                                    const data = await response.json();
+                                    console.log('Signup successful:', data);
+                                    const errorElement = document.getElementById('login-error');
+                                    if (errorElement) {
+                                        errorElement.innerText = '';
+                                    }
+                                    window.location.href = '/login';
+                                } else {
+                                    const errorElement = document.getElementById('login-error');
+                                    if (errorElement) {
+                                        errorElement.innerText = 'Signup failed. User with this nick already exists';
+                                    }
+                                    console.error('Signup failed. User with this nick already exists');
+                                }
+                            } catch (error) {
+                                const errorElement = document.getElementById('login-error');
+                                if (errorElement) {
+                                    errorElement.innerText = 'An error occurred during signup. Please try again later.';
+                                }
+                                console.error('An error occurred during signup:', error);
+                            }
+                        }</script>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

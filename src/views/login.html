@@ -10,19 +10,9 @@
 </head>
 
 <body>
-  <!-- <div class="header">
-    <div class="menuleft">
-      <a href="/">
-        <div class="logo"><img src="img/logo-bg.svg"></div>
-      </a>
-      <a href="/books">Książki</a>
-      <a href="/rentedBooks">Wypożyczone</a>
-    </div>
-    <div class="menus"><a href="/login">Login</a><a href="/login">Logout</a></div>
-  </div> -->
   <div class="mainPanel">
     <div class="login-content">
-      <img src="img/login.jpg" alt="Login Image">
+      <img src="img/login.jpg" alt="Log in Image">
       <div class="login-right">
         <a href="/">
           <div class="logo"><img src="img/logo-bg.svg"></div>
@@ -31,12 +21,18 @@
           <h1>Wellcome to BG AGH!</h1>
           <form action="/login" method="post" onsubmit="return handleSubmit(event);">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required onchange="handleChange(event)"><br>
+            <input type="text" id="username" name="username" minlength="4" maxlength="20" required
+              onchange="handleChange(event)"><br>
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required onchange="handleChange(event)"><br>
+            <input type="password" id="password" name="password" minlength="6" maxlength="20" required
+              onchange="handleChange(event)"><br>
             <input type="submit" value="Log in">
           </form>
           <p class="error" id="login-error"></p>
+          <div class="sign">
+            <p>Don’t you have an account?</p>
+            <a href="/signup">Sign up</a>
+          </div>
           <script>function handleChange(event) {
               const { name, value } = event.target;
               document.getElementById(name).value = value;

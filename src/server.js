@@ -43,9 +43,35 @@ const lastname = "Kowalski"
 // });
 
 let users = [
-    { id: 1, username: 'test', password: bcrypt.hashSync("test", 10), role: 'user' },
-    { id: 2, username: 'admin', password: bcrypt.hashSync("admin", 10), role: 'admin' }
+    { id: 1, username: 'test', password: bcrypt.hashSync("123456", 10), role: 'user' },
+    { id: 2, username: 'admin', password: bcrypt.hashSync("123456", 10), role: 'admin' }
 ];
+
+app.get('/signup', function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'views', 'signup.html'));
+});
+
+app.post('/signup', async function (req, res, next) {
+    // const { username, password } = req.body;
+    const maxId = Math.max(...users.map(user => user.id));
+    const newUser = {
+        id: maxId + 1,
+        username: req.body.username,
+        password: bcrypt.hashSync(req.body.password, 10),
+        role: 'user'
+    };
+    const user = users.find(
+        (u) => u.username === req.body.username
+    );
+
+    if (user) {
+        return res.status(401).json({ msg: 'User with this nick already exists' });
+    }
+
+    users.push(newUser);
+    res.json({ token: 'your_access_token' });
+
+});
 
 app.get('/login', function (req, res, next) {
     res.sendFile(path.join(__dirname, 'views', 'login.html'));

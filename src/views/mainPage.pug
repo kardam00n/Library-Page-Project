@@ -16,10 +16,13 @@ html(lang="pl")
         if user && user.role == 'admin'
           a(href="/") LibraryManager
       div.menus
-        a(href="/profile")
-          div.profile
-                img(src="img/profile.png")
-        a(href="/login" class="loginbutton") Log in
+        if user
+          a(href="/profile")
+            div.profile
+                  img(src="img/profile.png")
+        else
+          a(href="/login") Log in
+          a(href="/signup" class="loginbutton") Sign up
      
     div.back-header
         h1 Biblioteka Główna AGH

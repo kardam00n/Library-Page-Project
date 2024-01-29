@@ -148,7 +148,7 @@ a:visited {
 
 
 
-.book {
+.lbook {
     width: 20vw;
     height: auto;
 }
@@ -313,4 +313,8 @@ a:visited {
 
 .infoPanel button:hover {
     background-color: #0839ab;
+}
+
+.menus a {
+    padding-right: 10px;
 }

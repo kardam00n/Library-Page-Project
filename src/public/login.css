@@ -83,6 +83,7 @@ form input[type="submit"] {
 
 form input[type="submit"]:hover {
     background-color: #0839ab;
+    transition: 0.4s;
 }
 
 .error {
@@ -93,4 +94,46 @@ form input[type="submit"]:hover {
     font-family: 'InterLight';
     font-weight: bold;
     font-size: 14px;
+}
+
+.sign {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'InterLight';
+    font-size: 14px;
+}
+
+.sign a {
+    padding-left: 10px;
+    font-family: 'InterBold';
+    color: #012781;
+}
+
+.sign a:hover {
+    color: #0839ab;
+    transition: 0.4s;
+}
+
+.sign p {
+    padding: 0px;
+    margin: 0px;
+}
+
+.check {
+    display: flex;
+    font-family: 'InterLight';
+}
+
+.check input[type="checkbox"] {
+    width: 10%;
+}
+
+.check p {
+    font-size: 12px;
+    padding-left: 15px;
+}
+
+.check input[type="checkbox"]:checked {
+    background-color: #012781;
 }

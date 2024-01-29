@@ -20,9 +20,10 @@ const App = () => {
                 <a href="/books" className="loginbutton">See books</a>
             </div>
             <div className="stopka">
-                <p>Kontakt</p>
-                <p>Telefon: 123 456 789</p>
-                <p>Adres mailowy: biblio@agh.edu.pl</p>
+                <p>Biblioteka Główna Akademii Górniczo-Hutniczej im. Stanisława Staszica w Krakowie</p>
+                <p>tel. +48 12 617 32 08</p>
+                <p>e-mail: bgagh@bg.agh.edu.pl</p>
+
             </div>
         </div>
     );

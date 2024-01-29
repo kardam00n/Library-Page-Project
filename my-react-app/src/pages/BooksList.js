@@ -16,7 +16,6 @@ const BooksList = () => {
         <div>
             <div className="mainPanel">
                 <div className="errorPanel"></div>
-                <h1>Akademia Górniczo Hutnicza</h1>
                 <div className="bookPanel">
                     {books.map(book => (
                         <Book key={book.id} book={book} addBookToBasket={addBookToBasket} />

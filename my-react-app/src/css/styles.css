@@ -55,10 +55,10 @@ a:visited {
 }
 
 .header {
+    display: flex;
     position: fixed;
     height: 50px;
     width: 100%;
-    display: flex;
     background-color: #fff;
     margin: 0;
     justify-content: space-between;
@@ -267,7 +267,6 @@ a:visited {
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: white;
 }
 
 .back-header h1 {
@@ -276,6 +275,7 @@ a:visited {
     text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);
     padding: 8px;
     margin: 8px;
+    color: white;
 }
 
 .back-header a {

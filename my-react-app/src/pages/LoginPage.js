@@ -37,6 +37,7 @@ const LoginPage = () => {
                 console.log('Login successful:', data);
                 setLoginError('');
                 // Redirect or handle successful login as needed
+                window.location.href = '/';
             } else {
                 setLoginError('Login failed. Username or password is not correct.');
                 console.error('Login failed. Username or password is not correct.');

@@ -48,7 +48,7 @@ let users = [
 ];
 
 app.get('/signup', function (req, res, next) {
-    res.sendFile(path.join(__dirname, 'views', 'signup.html'));
+    res.sendFile(path.join(__dirname, 'pages', 'SignupPage.js'));
 });
 
 app.post('/signup', async function (req, res, next) {
@@ -74,7 +74,7 @@ app.post('/signup', async function (req, res, next) {
 });
 
 app.get('/login', function (req, res, next) {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+    res.sendFile(path.join(__dirname, 'pages', 'LoginPage.js'));
 });
 
 app.post('/login', async function (req, res, next) {

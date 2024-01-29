@@ -1,6 +1,6 @@
 import '../css/nopage.css';
 const NoPage = () => {
-    return (<p className='ErrorTypeText'>Dana strona nie istnieje, coś poszło nie tak!</p>);
+    return (<p className='ErrorTypeText'>This page does not exist</p>);
 };
 
 export default NoPage;

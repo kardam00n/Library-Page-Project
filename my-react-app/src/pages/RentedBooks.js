@@ -8,7 +8,6 @@ const RentedBooks = () => {
     return (
         <div>
             <div className="mainPanel">
-                <h1>Akademia Górniczo Hutnicza</h1>
                 {error ? (
                     <h2>{errorMSG}</h2>
                 ) : (

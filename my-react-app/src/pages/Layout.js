@@ -18,8 +18,9 @@ const Layout = () => {
                     <Link to="/rentedBooks">Borrowed</Link>
                 </div>
                 <div className="menus">
-                    <Link to="/login">Login</Link>
-                    <LogoutButton />
+                    <Link to="/login">Log in</Link>
+                    <a href="/signup" className="loginbutton">Sign up</a>
+                    {/* <LogoutButton /> */}
                 </div>
             </div>
 

@@ -33,7 +33,7 @@ html(lang="pl")
             div.lbook
                 img(src=rbook.book.url, alt=rbook.book.title)
             div.infoPanel
-                p Student: #{rbook.student}
+                p Student: #{rbook.student.username}
                 p Title: #{rbook.book.title}
                 p Author: #{rbook.book.author}
                 p.copies Number of copies borrowed: #{rbook.no_copies}

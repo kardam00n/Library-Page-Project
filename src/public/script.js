@@ -233,6 +233,8 @@ function updateRentedList() {
         bookDiv.classList.add('bookContainer');
 
         // Create the book image element
+        const lbook = document.createElement('div');
+        lbook.classList.add('lbook');
         const bookImg = document.createElement('img');
         bookImg.classList.add('book');
         bookImg.setAttribute('src', rbook.book.url);
@@ -267,7 +269,8 @@ function updateRentedList() {
         infoPanel.appendChild(copiesParagraph);
         infoPanel.appendChild(returnButton);
 
-        bookDiv.appendChild(bookImg);
+        lbook.appendChild(bookImg);
+        bookDiv.appendChild(lbook);
         bookDiv.appendChild(infoPanel);
 
         bookPanel.appendChild(bookDiv);

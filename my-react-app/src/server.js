@@ -42,22 +42,52 @@ const lastname = "Kowalski"
 //     response.sendFile(path.join(__dirname, 'views', 'mainPage.html'));
 // });
 
-const user = "test";
-const hashed_password = bcrypt.hashSync("test", 10); // Hash the password (adjust the saltRounds as needed)
+let users = [
+    { id: 1, username: 'test', password: bcrypt.hashSync("123456", 10), role: 'user' },
+    { id: 2, username: 'admin', password: bcrypt.hashSync("123456", 10), role: 'admin' }
+];
 
-// app.get('/login', function (req, res, next) {
-//     res.sendFile(path.join(__dirname, 'views', 'login.html'));
-// });
+app.get('/signup', function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'views', 'signup.html'));
+});
+
+app.post('/signup', async function (req, res, next) {
+    // const { username, password } = req.body;
+    const maxId = Math.max(...users.map(user => user.id));
+    const newUser = {
+        id: maxId + 1,
+        username: req.body.username,
+        password: bcrypt.hashSync(req.body.password, 10),
+        role: 'user'
+    };
+    const user = users.find(
+        (u) => u.username === req.body.username
+    );
+
+    if (user) {
+        return res.status(401).json({ msg: 'User with this nick already exists' });
+    }
+
+    users.push(newUser);
+    res.json({ token: 'your_access_token' });
+
+});
+
+app.get('/login', function (req, res, next) {
+    res.sendFile(path.join(__dirname, 'views', 'login.html'));
+});
 
 app.post('/login', async function (req, res, next) {
-    const username = req.body.username;
-    const password = req.body.password;
+    const { username, password } = req.body;
 
-    if (username !== user || !bcrypt.compareSync(password, hashed_password)) {
+    const user = users.find(
+        (u) => u.username === username
+    );
+
+    if (!user || !bcrypt.compareSync(password, user.password)) {
         return res.status(401).json({ msg: 'Bad username or password' });
     }
-    var newUser = { id: req.body.username, password: req.body.password };
-    req.session.user = newUser;
+    req.session.user = user;
     // Passwords match, login is successful
     // You can create a session or JWT token here if needed
     res.json({ token: 'your_access_token' });
@@ -73,6 +103,26 @@ function checkSignIn(req, res, next) {
     }
 }
 
+function checkAdminRole(req, res, next) {
+    if (req.session.user.role == 'admin') {
+        next();
+    } else {
+        var err = new Error("Not allowed!");
+        console.log(req.session.user);
+        return res.redirect('/');
+    }
+}
+
+function checkUserRole(req, res, next) {
+    if (req.session.user.role == 'user') {
+        next();
+    } else {
+        var err = new Error("This is user function!");
+        console.log(req.session.user);
+        return res.redirect('/');
+    }
+}
+
 app.get('/logout', function (req, res) {
     // Clear the user session
     req.session.user = null;
@@ -81,14 +131,18 @@ app.get('/logout', function (req, res) {
     res.redirect('/login');
 });
 
+app.get('/profile', checkSignIn, async function (request, response, next) {
+    response.render('profile', { "username": request.session.user.username, "role": request.session.user.role });
+});
+
 app.get('/', async function (request, response, next) {
     var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
-    response.render('mainPage', { 'mainBooks': docs }); // Render the 'index' view
+    response.render('mainPage', { 'mainBooks': docs, 'user': request.session.user }); // Render the 'index' view
 });
 
 app.get('/books', checkSignIn, async function (request, response, next) {
     var books = await db.all("SELECT * FROM books", []);
-    response.render('booksList', { 'books': books });
+    response.render('booksList', { 'books': books, "role": request.session.user.role });
 });
 
 app.post('/updateBookContainer', async function (request, response, next) {
@@ -127,22 +181,22 @@ app.post('/addBookToBasket', async function (request, response, next) {
     var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
     if (!student) {
         error = true;
-        errorMSG = "Podany student nie znajduje się w naszej bazie";
+        errorMSG = "The given student does not exist in the database";
     }
     else {
         var found = await db.get("SELECT * FROM books WHERE id = ?", [id]);
         book = found;
         if (!found) {
             error = true;
-            errorMSG = "Podanej książki nie ma w naszej bazie";
+            errorMSG = "The specified book does not exist in the database";
         }
         else {
             if (found.no_copies <= 0) {
                 error = true;
-                errorMSG = "Brak dostępnych egzemplarzy do wypożyczenia";
+                errorMSG = "No copies available for loan";
             }
             else if (!error) {
-                errorMSG = "Znaleziono: " + String(found.id);
+                errorMSG = "Found: " + String(found.id);
             }
         }
     }
@@ -160,18 +214,16 @@ app.post('/deleteBookFromBasket', async function (request, response, next) {
     response.send({ 'book': book });
 });
 
-app.get('/rentedBooks', checkSignIn, async function (request, response, next) {
-
+app.get('/rentedBooks', checkSignIn, checkUserRole, async function (request, response, next) {
     var error = false;
     var errorMSG = '';
-    var rentedBooks = []
+    var rentedBooks = [];
 
     var student = await db.get("SELECT * FROM students WHERE firstname = ? AND lastname = ?", [firstname, lastname]);
     if (!student) {
         error = true;
-        errorMSG = "Nie znaleziono użytkownika"
-    }
-    else {
+        errorMSG = "Nie znaleziono użytkownika";
+    } else {
         var rents = await db.all("SELECT * FROM rentals WHERE student_id = ?", [student.id]);
         for (let i = 0; i < rents.length; i++) {
             var rental = rents[i];
@@ -196,7 +248,8 @@ app.get('/rentedBooks', checkSignIn, async function (request, response, next) {
             }
         }
     }
-    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks });
+
+    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": request.session.user.username, "role": request.session.user.role });
 });
 
 app.post('/updateRentedList', async function (request, response, next) {
@@ -267,6 +320,42 @@ app.post('/returnBook', async function (request, response, next) {
         }
     }
     response.send({ "error": error, "errorMSG": errorMSG, "id": id });
+});
+
+
+app.get('/returned', checkSignIn, checkAdminRole, async function (request, response, next) {
+    var error = false;
+    var errorMSG = '';
+    var rentedBooks = [];
+
+    var student = await db.get("SELECT * FROM students");
+    var rents = await db.all("SELECT * FROM rentals");
+    for (let i = 0; i < rents.length; i++) {
+        var rental = rents[i];
+        var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
+        if (rentedBooks.length === 0) {
+            var newPos = {
+                'student': firstname + ' ' + lastname,
+                'book': book,
+                'no_copies': 1,
+            };
+            rentedBooks.push(newPos);
+        } else {
+            const foundBook = rentedBooks.find(obj => obj.book.id === book.id);
+            if (foundBook) {
+                foundBook.no_copies += 1;
+            } else {
+                var newPos = {
+                    'student': firstname + ' ' + lastname,
+                    'book': book,
+                    'no_copies': 1,
+                };
+                rentedBooks.push(newPos);
+            }
+        }
+    }
+
+    response.render('returned', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": request.session.user.username, "role": request.session.user.role });
 });
 
 /* ************************************************ */

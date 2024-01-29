@@ -15,18 +15,10 @@ const App = () => {
     return (
         <div>
 
-            <div className="mainPanel">
-                <h1>Akademia Górniczo Hutnicza</h1>
-                <div className="bookPanel">
-                    {mainBooks.map((book, index) => (
-                        <div key={index} className="bookContainer">
-                            <p>{book.title}</p>
-                            <img className="book" src={book.url} alt={book.title} />
-                        </div>
-                    ))}
-                </div>
+            <div className="back-header">
+                <h1>Biblioteka Główna AGH</h1>
+                <a href="/books" className="loginbutton">See books</a>
             </div>
-
             <div className="stopka">
                 <p>Kontakt</p>
                 <p>Telefon: 123 456 789</p>

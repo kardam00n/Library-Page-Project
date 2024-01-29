@@ -47,10 +47,6 @@ let users = [
     { id: 2, username: 'admin', password: bcrypt.hashSync("123456", 10), role: 'admin' }
 ];
 
-app.get('/signup', function (req, res, next) {
-    res.sendFile(path.join(__dirname, 'pages', 'SignupPage.js'));
-});
-
 app.post('/signup', async function (req, res, next) {
     // const { username, password } = req.body;
     const maxId = Math.max(...users.map(user => user.id));
@@ -71,10 +67,6 @@ app.post('/signup', async function (req, res, next) {
     users.push(newUser);
     res.json({ token: 'your_access_token' });
 
-});
-
-app.get('/login', function (req, res, next) {
-    res.sendFile(path.join(__dirname, 'pages', 'LoginPage.js'));
 });
 
 app.post('/login', async function (req, res, next) {

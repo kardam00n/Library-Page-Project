@@ -6,6 +6,7 @@ import Layout from './pages/Layout.js';
 import MainPage from './pages/MainPage.js';
 import RentedBooks from './pages/RentedBooks.js';
 import Books from './pages/BooksList.js';
+import Profile from './pages/Profile.js';
 import LoginPage from './pages/LoginPage.js';
 import SignupPage from './pages/SignupPage.js';
 import NoPage from './pages/NoPage.js';
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="main" element={<MainPage />} />
           <Route path="rentedBooks" element={<RentedBooks />} />
           <Route path="books" element={<Books />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="*" element={<NoPage />} />
         </Route>
       </Routes>

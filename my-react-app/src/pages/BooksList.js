@@ -17,10 +17,7 @@ const BooksList = () => {
             <div className="mainPanel">
                 <div className="errorPanel"></div>
                 <div className="bookPanel">
-                    {books.map(book => (
-                        <Book key={book.id} book={book} addBookToBasket={addBookToBasket} />
-                    ))}
-                    <Basket basketBooks={basketBooks} />
+
                 </div>
             </div>
             <div className="stopka">

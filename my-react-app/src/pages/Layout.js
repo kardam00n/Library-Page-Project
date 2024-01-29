@@ -1,6 +1,7 @@
 import { Outlet, Link } from "react-router-dom";
 import '../css/styles.css';
 import logo from '../img/logo-bg.svg';
+import profile from '../img/profile.png';
 import LogoutButton from "./LogoutButton.js";
 
 const Layout = () => {
@@ -10,7 +11,7 @@ const Layout = () => {
                 <div className="menuleft">
                     <Link to="/">
                         <div className="logo">
-                            <img src={logo} alt="Book Logo" />
+                            <img src={logo} alt="Book logo" />
                         </div>
                     </Link>
 
@@ -18,6 +19,10 @@ const Layout = () => {
                     <Link to="/rentedBooks">Borrowed</Link>
                 </div>
                 <div className="menus">
+                    <a href="/profile">
+                        <div className="profile">
+                            <img src={profile} alt="Profile logo" />
+                        </div></a>
                     <Link to="/login">Log in</Link>
                     <a href="/signup" className="loginbutton">Sign up</a>
                     {/* <LogoutButton /> */}

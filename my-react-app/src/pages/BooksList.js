@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Book from "./Book.js";
 import Basket from "./Basket.js";
 import '../css/styles.css';
@@ -46,24 +46,24 @@ const BooksList = () => {
             .catch((error) => {
                 console.log(error);
 
-        })
+            })
     };
 
     const returnFromBasket = (bookId) => {
         // Return the selected book from the basket
         const alreadyInBasket = basketBooks.find(book => book.book.id === bookId);
 
-        if(alreadyInBasket) {
-            if(alreadyInBasket.no_copies === 1){
+        if (alreadyInBasket) {
+            if (alreadyInBasket.no_copies === 1) {
                 setBasketBooks(basketBooks.filter(book => book.book.id !== bookId));
             }
-            else{
+            else {
                 alreadyInBasket.no_copies -= 1;
                 setBasketBooks([...basketBooks])
             }
 
         }
-        else{
+        else {
             console.log("Book not in basket")
         }
     }
@@ -73,21 +73,21 @@ const BooksList = () => {
         const selectedBook = books.find(book => book.id === bookId);
         const alreadyInBasket = basketBooks.find(book => book.book.id === bookId);
 
-        if(alreadyInBasket) {
-            if(alreadyInBasket.no_copies === alreadyInBasket.book.no_copies){
+        if (alreadyInBasket) {
+            if (alreadyInBasket.no_copies === alreadyInBasket.book.no_copies) {
                 console.log("No more copies left")
             }
-            else{
+            else {
                 alreadyInBasket.no_copies += 1;
                 setBasketBooks([...basketBooks])
             }
 
         }
-        else{
-            if(selectedBook.no_copies === 0){
+        else {
+            if (selectedBook.no_copies === 0) {
                 console.log("No more copies left")
             }
-            else{
+            else {
                 let multiBook = {
                     "book": selectedBook,
                     "no_copies": 1,
@@ -95,7 +95,7 @@ const BooksList = () => {
                 setBasketBooks(prevBasket => [...prevBasket, multiBook]);
             }
         }
- };
+    };
 
     return (
         <div>
@@ -103,13 +103,14 @@ const BooksList = () => {
                 <div className="errorPanel"></div>
                 <div className="bookPanel">
                     {books.map(book => (
-                        <Book key={book.id} book={book} addBookToBasket={addBookToBasket} basketBooks = {basketBooks} />
+                        <Book key={book.id} book={book} addBookToBasket={addBookToBasket} basketBooks={basketBooks} />
                     ))}
+                    <Basket basketBooks={basketBooks} rentBooks={rentBooks} returnFromBasket={returnFromBasket} />
                 </div>
+
             </div>
-            <div className="basketPanel">
-                <Basket basketBooks={basketBooks} rentBooks = {rentBooks} returnFromBasket = {returnFromBasket}/>
-            </div>
+
+
             <div className="stopka">
                 <p>Biblioteka Główna Akademii Górniczo-Hutniczej im. Stanisława Staszica w Krakowie</p>
                 <p>tel. +48 12 617 32 08</p>

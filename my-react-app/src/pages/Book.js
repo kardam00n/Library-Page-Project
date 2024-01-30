@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import '../css/styles.css';
 
-function Book({ book, addBookToBasket, basketBooks}) {
+function Book({ book, addBookToBasket, basketBooks }) {
 
     const [copiesLeft, setCopiesLeft] = useState(book.no_copies)
     const [displayedCopies, setDisplayedCopies] = useState(book.no_copies);
@@ -9,18 +9,19 @@ function Book({ book, addBookToBasket, basketBooks}) {
 
     useEffect(() => {
         var findBook = basketBooks.find(basketBook => basketBook.book.id === book.id);
-        if(findBook) {
+        if (findBook) {
             setDisplayedCopies(book.no_copies - findBook.no_copies + "/" + book.no_copies);
             setCopiesLeft(book.no_copies - findBook.no_copies);
         }
-        else{
+        else {
             setCopiesLeft(book.no_copies);
             setDisplayedCopies(book.no_copies);
         }
     }, [basketBooks]);
     return (
-        <div id={`book${book.id}`} className={`${(book.no_copies === 0 || copiesLeft === 0) ? 'noCopies' : ''} bookContainer` }>
-            <img src={book.url} alt={book.title} onClick={() => addBookToBasket(book.id)} />
+        <div id={`book${book.id}`} className={`${(book.no_copies === 0 || copiesLeft === 0) ? 'noCopies' : ''} bookContainer`}>
+            <div className="lbook">            <img src={book.url} alt={book.title} onClick={() => addBookToBasket(book.id)} /></div>
+
             <div className="infoPanel">
                 <p>Tytuł: {book.title}</p>
                 <p>Autor: {book.author}</p>

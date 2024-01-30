@@ -67,10 +67,6 @@ app.post('/signup', async function (req, res, next) {
 
 });
 
-app.get('/login', function (req, res, next) {
-    res.sendFile(path.join(__dirname, 'views', 'login.html'));
-});
-
 app.post('/login', async function (req, res, next) {
     const { username, password } = req.body;
 
@@ -79,8 +75,8 @@ app.post('/login', async function (req, res, next) {
     if (!user || !bcrypt.compareSync(password, user.password)) {
         return res.status(401).json({ msg: 'Bad username or password' });
     }
-
     req.session.user = user;
+    console.log(req.session.user);
     // Passwords match, login is successful
     // You can create a session or JWT token here if needed
     res.json({ token: 'your_access_token' });
@@ -117,6 +113,7 @@ function checkUserRole(req, res, next) {
 }
 
 app.get('/logout', function (req, res) {
+    console.log(request.session.user);
     // Clear the user session
     req.session.user = null;
 
@@ -125,18 +122,22 @@ app.get('/logout', function (req, res) {
 });
 
 app.get('/profile', checkSignIn, async function (request, response, next) {
-    console.log(request.session.user);
+    // console.log(request.session.user);
+    // Дозволити доступ з домену http://localhost:3000
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    // Дозволити включення облікових даних (якщо потрібно)
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     response.render('profile', { "username": request.session.user.username, "role": request.session.user.role });
 });
 
 app.get('/', async function (request, response, next) {
-    var docs = await db.all("SELECT * FROM books WHERE id < 5", []);
     response.render('mainPage', { 'mainBooks': docs, 'user': request.session.user }); // Render the 'index' view
 });
 
 app.get('/books', async function (request, response, next) {
+    console.log(request.session.user);
     var books = await db.all("SELECT * FROM books", []);
-    response.send({ 'books': books});
+    response.send({ 'books': books });
 });
 
 app.post('/updateBookContainer', async function (request, response, next) {

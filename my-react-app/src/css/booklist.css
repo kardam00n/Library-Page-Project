@@ -32,7 +32,7 @@
     font-family: 'Inter-LightItalic';
     src: url('../fonts/Inter-LightItalic.eot');
     src: url('../fonts/Inter-LightItalic.eot') format('embedded-opentype'),
-        url('../fonts/Inter-LightItalic.woff2') format('woff2'),
+        /*url('../fonts/Inter-LightItalic.woff2') format('woff2'),*/
         url('../fonts/Inter-LightItalic.woff') format('woff'),
         url('../fonts/Inter-LightItalic.ttf') format('truetype'),
         url('../fonts/Inter-LightItalic.svg#Inter-LightItalic') format('svg');
@@ -55,6 +55,8 @@
     justify-content: space-between;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
 .bookContainer .lbook {
@@ -64,7 +66,8 @@
 }
 
 .bookContainer .infoPanel {
-    width: 35%;
+    width: 50%;
+    height: 50%
 }
 
 .basketList button {
@@ -83,8 +86,8 @@
 }
 
 .bookContainer img {
-    height: 50%;
-    width: 50%;
+
+    width: 10%;
 }
 
 .basket {

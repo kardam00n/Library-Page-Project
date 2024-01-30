@@ -125,6 +125,7 @@ app.get('/logout', function (req, res) {
 });
 
 app.get('/profile', checkSignIn, async function (request, response, next) {
+    console.log(request.session.user);
     response.render('profile', { "username": request.session.user.username, "role": request.session.user.role });
 });
 
@@ -133,9 +134,9 @@ app.get('/', async function (request, response, next) {
     response.render('mainPage', { 'mainBooks': docs, 'user': request.session.user }); // Render the 'index' view
 });
 
-app.get('/books', checkSignIn, async function (request, response, next) {
+app.get('/books', async function (request, response, next) {
     var books = await db.all("SELECT * FROM books", []);
-    response.render('booksList', { 'books': books, "role": request.session.user.role });
+    response.send({ 'books': books});
 });
 
 app.post('/updateBookContainer', async function (request, response, next) {

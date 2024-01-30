@@ -1,12 +1,23 @@
 import React from 'react';
+import '../css/styles.css';
 
-const Basket = ({ basketBooks }) => (
-    <div>
-        <h1>Koszyk</h1>
+const Basket = ({ basketBooks, rentBooks, returnFromBasket }) => (
+    <div className="basket">
+        <div className="basket-row">
+            <img src="img/basket.png"></img>
+            <h1>Koszyk</h1>
+        </div>
+
         <div className="basketList">
             {basketBooks.length === 0 ? <p>No books in basket</p> : basketBooks.map(book => (
-                <p key={book.id}>{book.title}</p>
+                <div className="basketContainer" key={book.book.id}>
+                    <img src={book.book.url} onClick={() => returnFromBasket(book.book.id)}/>
+                    <p>{book.book.title}</p>
+                    <p>{book.no_copies}</p>
+
+                </div>
             ))}
+            <button onClick={rentBooks}>Wypożycz</button>
         </div>
     </div>
 );

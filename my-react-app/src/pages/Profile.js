@@ -1,7 +1,33 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import user from '../img/user.jpg';
 
-const ProfilePage = ({ username, role }) => {
+const ProfilePage = () => {
+
+    const [username, setUsername] = useState("");
+    const [role, setRole] = useState("");
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/profile', {
+                    method: 'GET',
+                    credentials: 'include', // Include credentials for session
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setUsername(data.username);
+                    setRole(data.role);
+                } else {
+                    console.error('An error occurred while fetching the profile:', response.statusText);
+                }
+            } catch (error) {
+                console.error('An error occurred while fetching the profile:', error.message);
+            }
+        };
+
+        fetchProfile();
+    }, []);
     const handleLogout = async () => {
         try {
             const response = await fetch('/logout', {

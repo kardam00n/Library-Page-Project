@@ -5,6 +5,20 @@ import profile from '../img/profile.png';
 import LogoutButton from "./LogoutButton.js";
 
 const Layout = () => {
+    const handleProfile = async () => {
+        try {
+            const response = await fetch('/profile', {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                console.error('An error occurred during log out:', response.statusText);
+            }
+        } catch (error) {
+            console.error('An error occurred during log out:', error.message);
+        }
+    };
     return (
         <>
             <div className="header">
@@ -19,13 +33,12 @@ const Layout = () => {
                     <Link to="/rentedBooks">Borrowed</Link>
                 </div>
                 <div className="menus">
-                    <a href="/profile">
+                    <a href="/profile" onClick={handleProfile}>
                         <div className="profile">
                             <img src={profile} alt="Profile logo" />
                         </div></a>
                     <Link to="/login">Log in</Link>
                     <a href="/signup" className="loginbutton">Sign up</a>
-                    {/* <LogoutButton /> */}
                 </div>
             </div>
 

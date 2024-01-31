@@ -77,8 +77,8 @@ const RentedBooks = () => {
                 )}
                 <div className="bookPanel">
                     {role === 'user' ?
-                        <h1>Books you borrowed:</h1> :
-                        <h1>All borrowed books:</h1>
+                        <h2>Books you borrowed:</h2> :
+                        <h2>All borrowed books:</h2>
                     }
                     {rentedBooks.map((rbook) => (
                         <div key={`book${rbook.book.id}`} className="bookContainer">
@@ -86,6 +86,8 @@ const RentedBooks = () => {
                                 <img src={rbook.book.url} alt={rbook.book.title}
                                 /></div>
                             <div className="infoPanel">
+                                {role === 'admin' && (
+                                    <p>Student: {rbook.student.username}</p>)}
                                 <p>Title: {rbook.book.title}</p>
                                 <p>Author: {rbook.book.author}</p>
                                 <p className="copies">Number of copies borrowed: {rbook.no_copies}</p>

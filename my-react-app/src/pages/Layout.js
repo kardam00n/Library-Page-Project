@@ -42,7 +42,7 @@ const Layout = () => {
 
                     <Link to="/books">Books</Link>
                     {role === 'admin' ?
-                        <Link to="/rentedBooks">Library Manager</Link> :
+                        <Link to="/rentedBooks">LibraryManager</Link> :
                         <Link to="/rentedBooks">Borrowed</Link>
                     }
                 </div>

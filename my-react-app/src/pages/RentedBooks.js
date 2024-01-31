@@ -7,6 +7,26 @@ const RentedBooks = () => {
     const errorMSG = "Your error message"; // Set your error message
 
     const [flag, setFlag] = useState(true)
+    const [role, setRole] = useState()
+
+    const checkRole = async () => {
+        await fetch('http://localhost:8000/profile', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Include credentials for session
+        }).then(async (response) => {
+            if (response.ok) {
+                let data = await response.json();
+                setRole(data.role);
+                console.log("Setting role: " + data.role)
+            } else {
+                console.error('An error occurred while fetching the user:', response.statusText);
+            }
+        });
+
+    }
 
     const returnBook = async (bookId) => {
         await fetch(`http://localhost:8000/returnBook`, {
@@ -43,6 +63,10 @@ const RentedBooks = () => {
         fetchBooks();
     }, [flag]);
 
+    useEffect(() => {
+        checkRole();
+    }, []);
+
     return (
         <div>
             <div className="mainPanel">
@@ -55,14 +79,18 @@ const RentedBooks = () => {
                     <h1>Wypożyczone przez ciebie książki</h1>
                     {rentedBooks.map((rbook) => (
                         <div key={`book${rbook.book.id}`} className="bookContainer">
-                            <img className="book" src={rbook.book.url} alt={rbook.book.title} />
+                            <div className="lbook">
+                                <img src={rbook.book.url} alt={rbook.book.title}
+                                /></div>
                             <div className="infoPanel">
                                 <p>Tytuł: {rbook.book.title}</p>
                                 <p>Autor: {rbook.book.author}</p>
                                 <p className="copies">Liczba wypożyczonych egzemplarzy: {rbook.no_copies}</p>
-                                <button type="button" onClick={() => returnBook(rbook.book.id)}>
-                                    Oddaj
-                                </button>
+                                {role === 'user' && (
+                                    <button type="button" onClick={() => returnBook(rbook.book.id)}>
+                                        Oddaj
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}

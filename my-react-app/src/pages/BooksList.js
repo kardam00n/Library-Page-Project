@@ -8,7 +8,26 @@ const BooksList = () => {
     const [books, setBooks] = useState([]); // Initialize books state
     const [basketBooks, setBasketBooks] = useState([]); // Initialize basket state
     const [flag, setFlag] = useState(true)
+    const [role, setRole] = useState()
 
+    const checkRole = async () => {
+        await fetch('http://localhost:8000/profile', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Include credentials for session
+        }).then(async (response) => {
+            if (response.ok) {
+                let data = await response.json();
+                setRole(data.role);
+                console.log("Setting role: " + data.role)
+            } else {
+                console.error('An error occurred while fetching the user:', response.statusText);
+            }
+        });
+
+    }
     const fetchBooks = async () => {
         try {
             const response = await fetch('http://localhost:8000/books', {
@@ -36,7 +55,7 @@ const BooksList = () => {
 
     useEffect(() => {
         fetchBooks();
-
+        checkRole();
     }, []);
 
     const rentBooks = async () => {
@@ -76,6 +95,7 @@ const BooksList = () => {
     }
 
     const addBookToBasket = (bookId) => {
+        if(role === "admin") return;
         // Add the selected book to the basket
         const selectedBook = books.find(book => book.id === bookId);
         const alreadyInBasket = basketBooks.find(book => book.book.id === bookId);
@@ -112,7 +132,7 @@ const BooksList = () => {
                     {books.map(book => (
                         <Book key={book.id} book={book} addBookToBasket={addBookToBasket} basketBooks={basketBooks} books={books}/>
                     ))}
-                    <Basket basketBooks={basketBooks} rentBooks={rentBooks} returnFromBasket={returnFromBasket} />
+                    {role === 'user' && <Basket basketBooks={basketBooks} rentBooks={rentBooks} returnFromBasket={returnFromBasket} />}
                 </div>
 
             </div>

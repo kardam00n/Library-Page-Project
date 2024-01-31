@@ -2,22 +2,34 @@ import { Outlet, Link } from "react-router-dom";
 import '../css/styles.css';
 import logo from '../img/logo-bg.svg';
 import profile from '../img/profile.png';
+import {useEffect, useState} from "react";
 
 const Layout = () => {
-    // const handleProfile = async () => {
-    //     try {
-    //         const response = await fetch('http://localhost:8000/profile', {
-    //             method: 'GET',
-    //             credentials: 'include',
-    //         });
+    const [role, setRole] = useState()
 
-    //         if (!response.ok) {
-    //             console.error('An error occurred during log out:', response.statusText);
-    //         }
-    //     } catch (error) {
-    //         console.error('An error occurred during log out:', error.message);
-    //     }
-    // };
+    const checkRole = async () => {
+        await fetch('http://localhost:8000/profile', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include', // Include credentials for session
+        }).then(async (response) => {
+            if (response.ok) {
+                let data = await response.json();
+                setRole(data.role);
+                console.log("Setting role: " + data.role)
+            } else {
+                console.error('An error occurred while fetching the user:', response.statusText);
+            }
+        });
+
+    }
+
+    useEffect(() => {
+        checkRole();
+    }, []);
+
     return (
         <>
             <div className="header">
@@ -29,7 +41,10 @@ const Layout = () => {
                     </Link>
 
                     <Link to="/books">Books</Link>
-                    <Link to="/rentedBooks">Borrowed</Link>
+                    {role === 'admin' ?
+                        <Link to="/rentedBooks">Library Manager</Link> :
+                        <Link to="/rentedBooks">Borrowed</Link>
+                    }
                 </div>
                 <div className="menus">
                     <a href="/profile">

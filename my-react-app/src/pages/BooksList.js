@@ -8,8 +8,6 @@ const BooksList = () => {
     const [books, setBooks] = useState([]); // Initialize books state
     const [basketBooks, setBasketBooks] = useState([]); // Initialize basket state
 
-
-
     useEffect(() => {
 
     }, [basketBooks]);
@@ -17,7 +15,13 @@ const BooksList = () => {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await fetch('http://localhost:8000/books');
+                const response = await fetch('http://localhost:8000/books', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // Include credentials for session
+                });
                 if (response.ok) {
                     const data = await response.json();
                     setBooks(data.books);

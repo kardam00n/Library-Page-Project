@@ -99,7 +99,7 @@ app.get('/logout', function (req, res) {
     req.session.user = null;
 
     // Redirect to the login page or any other destination
-    res.redirect('login');
+    res.redirect('http://localhost:3000/login');
 });
 
 function checkSignIn(req, res, next) {

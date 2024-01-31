@@ -16,7 +16,9 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.set('views', __dirname + '/views'); // Files with views can be found in the 'views' directory
+var l_user;
+
+app.set('pages', __dirname + '/pages'); // Files with views can be found in the 'views' directory
 app.set('view engine', 'pug'); // Use the 'Pug' template system
 app.locals.pretty = app.get('env') === 'development'; // The resulting HTML code will be indented in the development environment
 app.use(express.urlencoded({ extended: false }));
@@ -27,8 +29,15 @@ app.use(morgan('dev'));
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json()); // Parse JSON bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parse URL-encoded bodies
-app.use(session({ secret: "Your secret key" }));
-app.use(cors());
+// app.use(cors());
+
+app.use(cors({
+    origin: 'http://localhost:3000',  // Адреса вашого клієнтського додатку
+    credentials: true,
+}));
+
+app.use(session({ resave: true, secret: '123456' }));
+
 
 /* ******** */
 /* "Routes" */
@@ -68,6 +77,7 @@ app.post('/signup', async function (req, res, next) {
 });
 
 app.post('/login', async function (req, res, next) {
+
     const { username, password } = req.body;
 
     var user = await db.get("SELECT * FROM students WHERE username = ?", [username]);
@@ -75,11 +85,21 @@ app.post('/login', async function (req, res, next) {
     if (!user || !bcrypt.compareSync(password, user.password)) {
         return res.status(401).json({ msg: 'Bad username or password' });
     }
+
     req.session.user = user;
-    console.log(req.session.user);
+    req.session.save;
     // Passwords match, login is successful
     // You can create a session or JWT token here if needed
     res.json({ token: 'your_access_token' });
+});
+
+app.get('/logout', function (req, res) {
+    // Clear the user session
+    console.log(req.session.user);
+    req.session.user = null;
+
+    // Redirect to the login page or any other destination
+    res.redirect('login');
 });
 
 function checkSignIn(req, res, next) {
@@ -112,22 +132,10 @@ function checkUserRole(req, res, next) {
     }
 }
 
-app.get('/logout', function (req, res) {
+app.get('/profile', async function (request, response, next) {
+
     console.log(request.session.user);
-    // Clear the user session
-    req.session.user = null;
-
-    // Redirect to the login page or any other destination
-    res.redirect('/login');
-});
-
-app.get('/profile', checkSignIn, async function (request, response, next) {
-    // console.log(request.session.user);
-    // Дозволити доступ з домену http://localhost:3000
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    // Дозволити включення облікових даних (якщо потрібно)
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    response.render('profile', { "username": request.session.user.username, "role": request.session.user.role });
+    response.send({ "username": request.session.user.username, "role": request.session.user.role });
 });
 
 app.get('/', async function (request, response, next) {

@@ -2,23 +2,22 @@ import { Outlet, Link } from "react-router-dom";
 import '../css/styles.css';
 import logo from '../img/logo-bg.svg';
 import profile from '../img/profile.png';
-import LogoutButton from "./LogoutButton.js";
 
 const Layout = () => {
-    const handleProfile = async () => {
-        try {
-            const response = await fetch('/profile', {
-                method: 'GET',
-                credentials: 'include',
-            });
+    // const handleProfile = async () => {
+    //     try {
+    //         const response = await fetch('http://localhost:8000/profile', {
+    //             method: 'GET',
+    //             credentials: 'include',
+    //         });
 
-            if (!response.ok) {
-                console.error('An error occurred during log out:', response.statusText);
-            }
-        } catch (error) {
-            console.error('An error occurred during log out:', error.message);
-        }
-    };
+    //         if (!response.ok) {
+    //             console.error('An error occurred during log out:', response.statusText);
+    //         }
+    //     } catch (error) {
+    //         console.error('An error occurred during log out:', error.message);
+    //     }
+    // };
     return (
         <>
             <div className="header">
@@ -33,7 +32,7 @@ const Layout = () => {
                     <Link to="/rentedBooks">Borrowed</Link>
                 </div>
                 <div className="menus">
-                    <a href="/profile" onClick={handleProfile}>
+                    <a href="/profile">
                         <div className="profile">
                             <img src={profile} alt="Profile logo" />
                         </div></a>

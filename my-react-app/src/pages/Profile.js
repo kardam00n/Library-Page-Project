@@ -11,6 +11,9 @@ const ProfilePage = () => {
             try {
                 const response = await fetch('http://localhost:8000/profile', {
                     method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     credentials: 'include', // Include credentials for session
                 });
 
@@ -28,11 +31,20 @@ const ProfilePage = () => {
 
         fetchProfile();
     }, []);
-    const handleLogout = async () => {
+
+
+    const [logoutError, setLogoutError] = useState('');
+
+    const handleLogout = async (event) => {
+
+        event.preventDefault();
         try {
-            const response = await fetch('/logout', {
+            const response = await fetch('http://localhost:8000/logout', {
                 method: 'GET',
-                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include'
             });
 
             if (response.ok) {
@@ -41,6 +53,7 @@ const ProfilePage = () => {
                 console.error('An error occurred during log out:', response.statusText);
             }
         } catch (error) {
+            setLogoutError('An error occurred during log out. Please try again later.');
             console.error('An error occurred during log out:', error.message);
         }
     };

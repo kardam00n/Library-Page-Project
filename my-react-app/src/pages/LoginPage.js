@@ -29,6 +29,8 @@ const LoginPage = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: 'include',
+                crossDomain: true,
                 body: JSON.stringify({ username, password }),
             });
 

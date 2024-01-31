@@ -99,7 +99,7 @@ app.get('/logout', function (req, res) {
     req.session.user = null;
 
     // Redirect to the login page or any other destination
-    res.redirect('http://localhost:3000/login');
+    res.sendStatus(200);
 });
 
 function checkSignIn(req, res, next) {
@@ -134,9 +134,13 @@ function checkUserRole(req, res, next) {
 }
 
 app.get('/profile', async function (request, response, next) {
+    if (request.session.user === undefined) {
+        response.send({"username": "", "role": "" });
+    }else{
+        console.log(request.session.user);
+        response.send({ "username": request.session.user.username, "role": request.session.user.role });
+    }
 
-    console.log(request.session.user);
-    response.send({ "username": request.session.user.username, "role": request.session.user.role });
 });
 
 app.get('/', async function (request, response, next) {

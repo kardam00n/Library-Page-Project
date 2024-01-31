@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import user from '../img/user.jpg';
-
+import { useNavigate } from "react-router-dom";
 const ProfilePage = () => {
-
+    let navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [role, setRole] = useState("");
 
@@ -48,8 +48,8 @@ const ProfilePage = () => {
             });
 
             if (response.ok) {
-                window.location.href = '/login';
-            } else {
+            navigate("/login")
+            }else {
                 console.error('An error occurred during log out:', response.statusText);
             }
         } catch (error) {

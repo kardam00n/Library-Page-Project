@@ -134,7 +134,7 @@ function checkUserRole(req, res, next) {
 }
 
 app.get('/profile', async function (request, response, next) {
-    if (request.session.user === undefined) {
+    if (request.session.user === undefined || request.session.user === null){
         response.send({"username": "", "role": "" });
     }else{
         console.log(request.session.user);

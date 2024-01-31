@@ -13,7 +13,7 @@ const App = () => {
     ];
 
     return (
-        <div>
+        <body>
             <div className="back-header">
                 <h1>Biblioteka Główna AGH</h1>
                 <a href="/books" className="loginbutton">See books</a>
@@ -23,7 +23,7 @@ const App = () => {
                 <p>tel. +48 12 617 32 08</p>
                 <p>e-mail: bgagh@bg.agh.edu.pl</p>
             </div>
-        </div>
+        </body>
     );
 };
 

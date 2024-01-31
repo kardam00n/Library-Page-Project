@@ -2,7 +2,7 @@ import { Outlet, Link } from "react-router-dom";
 import '../css/styles.css';
 import logo from '../img/logo-bg.svg';
 import profile from '../img/profile.png';
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 const Layout = () => {
     const [role, setRole] = useState()
@@ -47,12 +47,15 @@ const Layout = () => {
                     }
                 </div>
                 <div className="menus">
-                    <a href="/profile">
-                        <div className="profile">
-                            <img src={profile} alt="Profile logo" />
-                        </div></a>
-                    <Link to="/login">Log in</Link>
-                    <a href="/signup" className="loginbutton">Sign up</a>
+                    {role === '' ?
+                        <div>
+                            <Link to="/login">Log in</Link>
+                            <a href="/signup" className="loginbutton">Sign up</a>
+                        </div> :
+                        <a href="/profile">
+                            <div className="profile">
+                                <img src={profile} alt="Profile logo" />
+                            </div></a>}
                 </div>
             </div>
 

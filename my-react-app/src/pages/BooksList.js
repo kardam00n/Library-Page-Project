@@ -65,7 +65,7 @@ const BooksList = () => {
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({rentedBooks: basketBooks}),
+            body: JSON.stringify({ rentedBooks: basketBooks }),
         }).then(
             setBasketBooks([]) // Clear the basket
         ).then(setFlag(!flag))
@@ -95,7 +95,7 @@ const BooksList = () => {
     }
 
     const addBookToBasket = (bookId) => {
-        if(role === "admin") return;
+        if (role === "admin") return;
         // Add the selected book to the basket
         const selectedBook = books.find(book => book.id === bookId);
         const alreadyInBasket = basketBooks.find(book => book.book.id === bookId);
@@ -125,12 +125,12 @@ const BooksList = () => {
     };
 
     return (
-        <div>
+        <body>
             <div className="mainPanel">
                 <div className="errorPanel"></div>
                 <div className="bookPanel">
                     {books.map(book => (
-                        <Book key={book.id} book={book} addBookToBasket={addBookToBasket} basketBooks={basketBooks} books={books}/>
+                        <Book key={book.id} book={book} addBookToBasket={addBookToBasket} basketBooks={basketBooks} books={books} />
                     ))}
                     {role === 'user' && <Basket basketBooks={basketBooks} rentBooks={rentBooks} returnFromBasket={returnFromBasket} />}
                 </div>
@@ -143,7 +143,7 @@ const BooksList = () => {
                 <p>tel. +48 12 617 32 08</p>
                 <p>e-mail: bgagh@bg.agh.edu.pl</p>
             </div>
-        </div>
+        </body>
     );
 };
 

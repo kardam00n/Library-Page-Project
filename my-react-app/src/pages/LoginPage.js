@@ -51,55 +51,57 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="mainPanel">
-            <div className="login-content">
-                <img src={login} alt="Log in" />
-                <div className="login-right">
-                    <a href="/">
-                        <div className="logo">
-                            <img src={logo} alt="Logo" />
-                        </div>
-                    </a>
-                    <div className="login-form">
-                        <h1>Welcome to BG AGH!</h1>
-                        <form onSubmit={handleSubmit}>
-                            <label htmlFor="username">Username:</label>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                minLength="4"
-                                maxLength="20"
-                                required
-                                onChange={handleChange}
-                                value={formData.username}
-                            />
-                            <br />
-                            <label htmlFor="password">Password:</label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                minLength="6"
-                                maxLength="20"
-                                required
-                                onChange={handleChange}
-                                value={formData.password}
-                            />
-                            <br />
-                            <input type="submit" value="Log in" />
-                        </form>
-                        <p className="error" id="login-error">
-                            {loginError}
-                        </p>
-                        <div className="sign">
-                            <p>Don’t you have an account?</p>
-                            <a href="/signup">Sign up</a>
+        <body1>
+            <div className="mainPanel">
+                <div className="login-content">
+                    <img src={login} alt="Log in" />
+                    <div className="login-right">
+                        <a href="/">
+                            <div className="logo">
+                                <img src={logo} alt="Logo" />
+                            </div>
+                        </a>
+                        <div className="login-form">
+                            <h1>Welcome to BG AGH!</h1>
+                            <form onSubmit={handleSubmit}>
+                                <label htmlFor="username">Username:</label>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    minLength="4"
+                                    maxLength="20"
+                                    required
+                                    onChange={handleChange}
+                                    value={formData.username}
+                                />
+                                <br />
+                                <label htmlFor="password">Password:</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    minLength="6"
+                                    maxLength="20"
+                                    required
+                                    onChange={handleChange}
+                                    value={formData.password}
+                                />
+                                <br />
+                                <input type="submit" value="Log in" />
+                            </form>
+                            <p className="error" id="login-error">
+                                {loginError}
+                            </p>
+                            <div className="sign">
+                                <p>Don’t you have an account?</p>
+                                <a href="/signup">Sign up</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </body1>
     );
 };
 

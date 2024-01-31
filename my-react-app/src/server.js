@@ -143,7 +143,6 @@ app.get('/', async function (request, response, next) {
 });
 
 app.get('/books', async function (request, response, next) {
-    console.log(request.session.user);
     var books = await db.all("SELECT * FROM books", []);
     response.send({ 'books': books });
 });
@@ -164,7 +163,15 @@ app.post('/rentBooks', async function (request, response, next) {
         for (const rbook of rentedBooks) {
             var book = rbook.book;
             for (var i = 0; i < rbook.no_copies; i++) {
-                await db.run("INSERT INTO rentals (book_id, student_id) VALUES (?, ?)", [book.id, student.id]);
+                console.log(student.id, book.id);
+
+                try {
+                    await newRental(student.id, book.id);
+                }
+                catch (e){
+                    console.log(e);
+                }
+
             }
             await db.run("UPDATE books SET no_copies = ? WHERE id = ?", [book.no_copies - rbook.no_copies, book.id]);
         }
@@ -172,6 +179,11 @@ app.post('/rentBooks', async function (request, response, next) {
     response.send({ "rentedBooks": rentedBooks, "error": error, "errorMSG": errorMSG });
 
 });
+
+async function newRental(student_id, book_id) {
+    console.log("new rental");
+    await db.run("INSERT INTO rentals(student_id, book_id) VALUES (?,?)", [student_id, book_id]);
+}
 
 app.post('/addBookToBasket', async function (request, response, next) {
 
@@ -252,7 +264,7 @@ app.get('/rentedBooks', checkSignIn, checkUserRole, async function (request, res
         }
     }
 
-    response.render('rented', { "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": request.session.user.username, "role": request.session.user.role });
+    response.send({ "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": request.session.user.username, "role": request.session.user.role });
 });
 
 app.post('/updateRentedList', async function (request, response, next) {

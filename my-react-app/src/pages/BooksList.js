@@ -7,46 +7,49 @@ import '../css/booklist.css'
 const BooksList = () => {
     const [books, setBooks] = useState([]); // Initialize books state
     const [basketBooks, setBasketBooks] = useState([]); // Initialize basket state
+    const [flag, setFlag] = useState(true)
 
-    useEffect(() => {
-
-    }, [basketBooks]);
-
-    useEffect(() => {
-        const fetchBooks = async () => {
-            try {
-                const response = await fetch('http://localhost:8000/books', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    credentials: 'include', // Include credentials for session
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    setBooks(data.books);
-                } else {
-                    console.error('An error occurred while fetching the books:', response.statusText);
-                }
-            } catch (error) {
-                console.error('An error occurred while fetching the books:', error.message);
+    const fetchBooks = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/books', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', // Include credentials for session
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setBooks(data.books);
+            } else {
+                console.error('An error occurred while fetching the books:', response.statusText);
             }
-        };
+        } catch (error) {
+            console.error('An error occurred while fetching the books:', error.message);
+        }
+    };
 
+    useEffect(() => {
+        fetchBooks();
+
+    }, [flag]);
+
+    useEffect(() => {
         fetchBooks();
 
     }, []);
 
     const rentBooks = async () => {
         fetch("http://localhost:8000/rentBooks", {
-            method: "POST",
-            "credentials": "include",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(basketBooks),
-        })
-
+            credentials: 'include',
+            body: JSON.stringify({rentedBooks: basketBooks}),
+        }).then(
+            setBasketBooks([]) // Clear the basket
+        ).then(setFlag(!flag))
             .catch((error) => {
                 console.log(error);
 
@@ -107,7 +110,7 @@ const BooksList = () => {
                 <div className="errorPanel"></div>
                 <div className="bookPanel">
                     {books.map(book => (
-                        <Book key={book.id} book={book} addBookToBasket={addBookToBasket} basketBooks={basketBooks} />
+                        <Book key={book.id} book={book} addBookToBasket={addBookToBasket} basketBooks={basketBooks} books={books}/>
                     ))}
                     <Basket basketBooks={basketBooks} rentBooks={rentBooks} returnFromBasket={returnFromBasket} />
                 </div>

@@ -1,9 +1,47 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import '../css/styles.css';
 
 const RentedBooks = () => {
-    const rentedBooks = [/* your rentedBooks data */];
+    const [rentedBooks, setRentedBooks] = useState([])
     const error = false; // Set to true if there's an error
     const errorMSG = "Your error message"; // Set your error message
+
+    const [flag, setFlag] = useState(true)
+
+    const returnBook = async (bookId) => {
+        await fetch(`http://localhost:8000/returnBook`, {
+            method: 'POST',
+            credentials: 'include', // Include credentials for session
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id: bookId}),
+        }).then(setFlag(!flag));
+    };
+
+    const fetchBooks = async () => {
+        try {
+            const response = await fetch('http://localhost:8000/rentedBooks', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include', // Include credentials for session
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setRentedBooks(data.rentedBooks);
+            } else {
+                console.error('An error occurred while fetching the books:', response.statusText);
+            }
+        } catch (error) {
+            console.error('An error occurred while fetching the books:', error.message);
+        }
+    };
+
+    useEffect(() => {
+        fetchBooks();
+    }, [flag]);
 
     return (
         <div>
@@ -40,9 +78,5 @@ const RentedBooks = () => {
     );
 };
 
-// Dummy function, replace with your actual returnBook function
-const returnBook = (bookId) => {
-    console.log(`Returning book with ID: ${bookId}`);
-};
 
 export default RentedBooks;

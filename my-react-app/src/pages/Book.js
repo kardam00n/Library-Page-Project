@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../css/styles.css';
 
-function Book({ book, addBookToBasket, basketBooks }) {
+function Book({ book, addBookToBasket, basketBooks, books }) {
 
     const [copiesLeft, setCopiesLeft] = useState(book.no_copies)
     const [displayedCopies, setDisplayedCopies] = useState(book.no_copies);
@@ -16,8 +16,9 @@ function Book({ book, addBookToBasket, basketBooks }) {
         else {
             setCopiesLeft(book.no_copies);
             setDisplayedCopies(book.no_copies);
+            console.log('refresh')
         }
-    }, [basketBooks]);
+    }, [basketBooks, books]);
     return (
         <div id={`book${book.id}`} className={`${(book.no_copies === 0 || copiesLeft === 0) ? 'noCopies' : ''} bookContainer`}>
             <div className="lbook">            <img src={book.url} alt={book.title} onClick={() => addBookToBasket(book.id)} /></div>

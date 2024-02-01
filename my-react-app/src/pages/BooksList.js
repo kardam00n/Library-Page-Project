@@ -3,7 +3,7 @@ import Book from "./Book.js";
 import Basket from "./Basket.js";
 import '../css/styles.css';
 import '../css/booklist.css'
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const BooksList = () => {
     const [books, setBooks] = useState([]); // Initialize books state
     const [basketBooks, setBasketBooks] = useState([]); // Initialize basket state
@@ -45,7 +45,7 @@ const BooksList = () => {
                 setBooks(data.books);
             } else {
                 const data = await response.json();
-                if(data.error == "notSigned"){
+                if (data.error === "notSigned") {
                     navigate("/login")
                 }
                 console.error('An error occurred while fetching the books:', response.statusText);

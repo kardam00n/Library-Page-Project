@@ -23,7 +23,7 @@ const ProfilePage = () => {
                     setRole(data.role);
                 } else {
                     const data = await response.json();
-                    if(data.error == "notSigned"){
+                    if (data.error === "notSigned") {
                         navigate("/login")
                     }
                     console.error('An error occurred while fetching the profile:', response.statusText);
@@ -52,8 +52,8 @@ const ProfilePage = () => {
             });
 
             if (response.ok) {
-            navigate("/login")
-            }else {
+                navigate("/login")
+            } else {
                 console.error('An error occurred during log out:', response.statusText);
             }
         } catch (error) {

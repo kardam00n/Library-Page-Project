@@ -32,14 +32,20 @@ const RentedBooks = () => {
     }
 
     const returnBook = async (bookId) => {
-        await fetch(`http://localhost:8000/returnBook`, {
-            method: 'POST',
-            credentials: 'include', // Include credentials for session
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: bookId }),
-        }).then(setFlag(!flag));
+        try {
+            await fetch(`http://localhost:8000/returnBook`, {
+                method: 'POST',
+                credentials: 'include', // Include credentials for session
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: bookId }),
+            });
+
+            setFlag(!flag);
+        } catch (error) {
+            console.error('Error returning book:', error);
+        }
     };
 
     const fetchBooks = async () => {
@@ -56,7 +62,7 @@ const RentedBooks = () => {
                 setRentedBooks(data.rentedBooks);
             } else {
                 const data = await response.json();
-                if(data.error == "notSigned"){
+                if (data.error === "notSigned") {
                     navigate("/login")
                 }
                 console.error('An error occurred while fetching the books:', response.statusText);

@@ -112,42 +112,20 @@ function checkSignIn(req, res, next) {
     }
 }
 
-
-function checkAdminRole(req, res, next) {
-    if (req.session.user.role == 'admin') {
-        next();
-    } else {
-        var err = new Error("Not allowed!");
-        console.log(req.session.user);
-        return res.redirect('/');
-    }
-}
-
-function checkUserRole(req, res, next) {
-    if (req.session.user.role == 'user') {
-        next();
-    } else {
-        var err = new Error("This is user function!");
-        console.log(req.session.user);
-        return res.redirect('/');
-    }
-}
-
 app.get('/profile', checkSignIn, async function (request, response, next) {
-    if (request.session.user === undefined || request.session.user === null){
-        response.send({"username": "", "role": "" });
-    }else{
+    if (request.session.user === undefined || request.session.user === null) {
+        response.send({ "username": "", "role": "" });
+    } else {
         console.log(request.session.user);
         response.send({ "username": request.session.user.username, "role": request.session.user.role });
     }
-
 });
 
 app.get('/', async function (request, response, next) {
     response.send({ 'user': request.session.user }); // Render the 'index' view
 });
 
-app.get('/books',checkSignIn, async function (request, response, next) {
+app.get('/books', checkSignIn, async function (request, response, next) {
     var books = await db.all("SELECT * FROM books", []);
     response.send({ 'books': books });
 });

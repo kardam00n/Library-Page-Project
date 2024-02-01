@@ -125,7 +125,7 @@ app.get('/', async function (request, response, next) {
     response.send({ 'user': request.session.user }); // Render the 'index' view
 });
 
-app.get('/books', checkSignIn, async function (request, response, next) {
+app.get('/books', async function (request, response, next) {
     var books = await db.all("SELECT * FROM books", []);
     response.send({ 'books': books });
 });

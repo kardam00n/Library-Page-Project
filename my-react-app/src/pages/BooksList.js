@@ -46,7 +46,7 @@ const BooksList = () => {
             } else {
                 const data = await response.json();
                 if (data.error === "notSigned") {
-                    navigate("/login")
+                    // navigate("/login")
                 }
                 console.error('An error occurred while fetching the books:', response.statusText);
             }
@@ -102,7 +102,7 @@ const BooksList = () => {
     }
 
     const addBookToBasket = (bookId) => {
-        if (role === "admin") return;
+        if (role !== "user") return;
         // Add the selected book to the basket
         const selectedBook = books.find(book => book.id === bookId);
         const alreadyInBasket = basketBooks.find(book => book.book.id === bookId);

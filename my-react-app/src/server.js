@@ -108,7 +108,7 @@ function checkSignIn(req, res, next) {
     } else {
         var err = new Error("Not logged in!");
         console.log(req.session.user);
-        return res.redirect('login'); // Redirect directly if not logged in
+        return res.status(401).json({ error: 'notSigned' });
     }
 }
 
@@ -133,7 +133,7 @@ function checkUserRole(req, res, next) {
     }
 }
 
-app.get('/profile', async function (request, response, next) {
+app.get('/profile', checkSignIn, async function (request, response, next) {
     if (request.session.user === undefined || request.session.user === null){
         response.send({"username": "", "role": "" });
     }else{
@@ -147,7 +147,7 @@ app.get('/', async function (request, response, next) {
     response.send({ 'user': request.session.user }); // Render the 'index' view
 });
 
-app.get('/books', async function (request, response, next) {
+app.get('/books',checkSignIn, async function (request, response, next) {
     var books = await db.all("SELECT * FROM books", []);
     response.send({ 'books': books });
 });

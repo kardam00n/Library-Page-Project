@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import '../css/styles.css';
+import { useNavigate } from "react-router-dom";
 
 const RentedBooks = () => {
     const [rentedBooks, setRentedBooks] = useState([])
     const error = false; // Set to true if there's an error
     const errorMSG = "Your error message"; // Set your error message
+
+    let navigate = useNavigate();
 
     const [flag, setFlag] = useState(true)
     const [role, setRole] = useState()
@@ -52,6 +55,10 @@ const RentedBooks = () => {
                 const data = await response.json();
                 setRentedBooks(data.rentedBooks);
             } else {
+                const data = await response.json();
+                if(data.error == "notSigned"){
+                    navigate("/login")
+                }
                 console.error('An error occurred while fetching the books:', response.statusText);
             }
         } catch (error) {
@@ -65,6 +72,7 @@ const RentedBooks = () => {
 
     useEffect(() => {
         checkRole();
+        fetchBooks();
     }, []);
 
     return (

@@ -22,6 +22,10 @@ const ProfilePage = () => {
                     setUsername(data.username);
                     setRole(data.role);
                 } else {
+                    const data = await response.json();
+                    if(data.error == "notSigned"){
+                        navigate("/login")
+                    }
                     console.error('An error occurred while fetching the profile:', response.statusText);
                 }
             } catch (error) {

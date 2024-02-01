@@ -3,12 +3,14 @@ import Book from "./Book.js";
 import Basket from "./Basket.js";
 import '../css/styles.css';
 import '../css/booklist.css'
-
+import {useNavigate} from "react-router-dom";
 const BooksList = () => {
     const [books, setBooks] = useState([]); // Initialize books state
     const [basketBooks, setBasketBooks] = useState([]); // Initialize basket state
     const [flag, setFlag] = useState(true)
     const [role, setRole] = useState()
+
+    let navigate = useNavigate();
 
     const checkRole = async () => {
         await fetch('http://localhost:8000/profile', {
@@ -23,6 +25,7 @@ const BooksList = () => {
                 setRole(data.role);
                 console.log("Setting role: " + data.role)
             } else {
+
                 console.error('An error occurred while fetching the user:', response.statusText);
             }
         });
@@ -41,6 +44,10 @@ const BooksList = () => {
                 const data = await response.json();
                 setBooks(data.books);
             } else {
+                const data = await response.json();
+                if(data.error == "notSigned"){
+                    navigate("/login")
+                }
                 console.error('An error occurred while fetching the books:', response.statusText);
             }
         } catch (error) {

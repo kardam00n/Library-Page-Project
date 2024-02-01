@@ -24,11 +24,11 @@ function Book({ book, addBookToBasket, basketBooks, books }) {
             <div className="lbook">            <img src={book.url} alt={book.title} onClick={() => addBookToBasket(book.id)} /></div>
 
             <div className="infoPanel">
-                <p>Tytuł: {book.title}</p>
-                <p>Autor: {book.author}</p>
-                <p className="copies">Liczba wolnych egzemplarzy: {displayedCopies}</p>
-                <p>Wydział: {book.faculty}</p>
-                <p>Kierunek studiów: {book.major}</p>
+                <p>Title: {book.title}</p>
+                <p>Author: {book.author}</p>
+                <p className="copies">Number of available copies: {displayedCopies}</p>
+                <p>Faculty: {book.faculty}</p>
+                <p>Field of study: {book.major}</p>
             </div>
         </div>
     );

@@ -2,6 +2,13 @@ import React from 'react';
 import '../css/styles.css';
 import '../css/booklist.css';
 
+function truncateText(text, maxLength) {
+    if (text.length > maxLength) {
+        return text.slice(0, maxLength - 3) + '...';
+    }
+    return text;
+}
+
 const Basket = ({ basketBooks, rentBooks, returnFromBasket }) => (
     <div className="basket">
         <div className="basket-row">
@@ -13,7 +20,8 @@ const Basket = ({ basketBooks, rentBooks, returnFromBasket }) => (
             {basketBooks.length === 0 ? <p>No books in basket</p> : basketBooks.map(book => (
                 <div className="basketContainer" key={book.book.id}>
                     <img src={book.book.url} onClick={() => returnFromBasket(book.book.id)} />
-                    <p>{book.book.title}</p>
+                    <p>{truncateText(book.book.title, 8)}</p>
+                    <p>{book.book.author}</p>
                     <p>{book.no_copies}</p>
 
                 </div>

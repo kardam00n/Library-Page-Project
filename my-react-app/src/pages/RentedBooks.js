@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import '../css/styles.css';
 import { useNavigate } from "react-router-dom";
 
@@ -38,7 +38,7 @@ const RentedBooks = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({id: bookId}),
+            body: JSON.stringify({ id: bookId }),
         }).then(setFlag(!flag));
     };
 
@@ -76,7 +76,7 @@ const RentedBooks = () => {
     }, []);
 
     return (
-        <div>
+        <body>
             <div className="mainPanel">
                 {error ? (
                     <h2>{errorMSG}</h2>
@@ -84,19 +84,24 @@ const RentedBooks = () => {
                     <div className="errorPanel"></div>
                 )}
                 <div className="bookPanel">
-                    <h1>Wypożyczone przez ciebie książki</h1>
+                    {role === 'user' ?
+                        <h2>Books you borrowed:</h2> :
+                        <h2>All borrowed books:</h2>
+                    }
                     {rentedBooks.map((rbook) => (
                         <div key={`book${rbook.book.id}`} className="bookContainer">
                             <div className="lbook">
                                 <img src={rbook.book.url} alt={rbook.book.title}
                                 /></div>
                             <div className="infoPanel">
-                                <p>Tytuł: {rbook.book.title}</p>
-                                <p>Autor: {rbook.book.author}</p>
-                                <p className="copies">Liczba wypożyczonych egzemplarzy: {rbook.no_copies}</p>
+                                {role === 'admin' && (
+                                    <p>Student: {rbook.student.username}</p>)}
+                                <p>Title: {rbook.book.title}</p>
+                                <p>Author: {rbook.book.author}</p>
+                                <p className="copies">Number of copies borrowed: {rbook.no_copies}</p>
                                 {role === 'user' && (
                                     <button type="button" onClick={() => returnBook(rbook.book.id)}>
-                                        Oddaj
+                                        Give back
                                     </button>
                                 )}
                             </div>
@@ -110,7 +115,7 @@ const RentedBooks = () => {
                 <p>tel. +48 12 617 32 08</p>
                 <p>e-mail: bgagh@bg.agh.edu.pl</p>
             </div>
-        </div>
+        </body >
     );
 };
 

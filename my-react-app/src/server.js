@@ -173,7 +173,7 @@ app.post('/rentBooks', async function (request, response, next) {
                 try {
                     await newRental(student.id, book.id);
                 }
-                catch (e){
+                catch (e) {
                     console.log(e);
                 }
 
@@ -195,40 +195,49 @@ app.get('/rentedBooks', checkSignIn, async function (request, response, next) {
     var errorMSG = '';
     var rentedBooks = [];
 
-    if(request.session.user.role == 'user'){
+    if (request.session.user.role == 'user') {
         var student = await db.get("SELECT * FROM students WHERE username = ?", [request.session.user.username]);
         if (!student) {
             error = true;
             errorMSG = "Nie znaleziono użytkownika";
         } else {
             var rents = await db.all("SELECT * FROM rentals WHERE student_id = ?", [student.id]);
+            var students = await db.all("SELECT * FROM students WHERE id = ?", [student.id]);
         }
     }
-    else if(request.session.user.role == 'admin'){
+    else if (request.session.user.role == 'admin') {
         var rents = await db.all("SELECT * FROM rentals");
-        }
+        var students = await db.all("SELECT * FROM students");
+    }
+    for (let j = 0; j < students.length; j++) {
         for (let i = 0; i < rents.length; i++) {
             var rental = rents[i];
-            var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
-            if (rentedBooks.length === 0) {
-                var newPos = {
-                    'book': book,
-                    'no_copies': 1,
-                };
-                rentedBooks.push(newPos);
-            } else {
-                const foundBook = rentedBooks.find(obj => obj.book.id === book.id);
-                if (foundBook) {
-                    foundBook.no_copies += 1;
-                } else {
+            var student = students[j];
+            if (rental.student_id === student.id) {
+                var book = await db.get("SELECT * FROM books WHERE id = ?", [rental.book_id]);
+                if (rentedBooks.length === 0) {
                     var newPos = {
+                        'student': student,
                         'book': book,
                         'no_copies': 1,
                     };
                     rentedBooks.push(newPos);
+                } else {
+                    const foundBook = rentedBooks.find(obj => obj.book.id === book.id && obj.student.id == student.id);
+                    if (foundBook) {
+                        foundBook.no_copies += 1;
+                    } else {
+                        var newPos = {
+                            'student': student,
+                            'book': book,
+                            'no_copies': 1,
+                        };
+                        rentedBooks.push(newPos);
+                    }
                 }
             }
         }
+    }
     response.send({ "error": error, "errorMSG": errorMSG, "rentedBooks": rentedBooks, "username": request.session.user.username, "role": request.session.user.role });
 });
 
@@ -263,6 +272,9 @@ app.post('/returnBook', async function (request, response, next) {
     }
     response.send({ "error": error, "errorMSG": errorMSG, "id": id });
 });
+
+
+
 /* ************************************************ */
 
 app.listen(8000, function () {

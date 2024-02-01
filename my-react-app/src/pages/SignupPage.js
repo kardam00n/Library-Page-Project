@@ -69,7 +69,7 @@ const SignUp = () => {
                             <input type="password" id="password" name="password" minLength="6" maxLength="20" required onChange={handleChange} /><br />
                             <div className="check">
                                 <input type="checkbox" id="myCheckbox" name="myCheckbox" />
-                                <p>I do not wish to receive news and promotions from Freepik Company by email.</p>
+                                <p>I do not wish to receive news and promotions from BG AGH by email.</p>
                             </div>
                             <input type="submit" value="Sign up" />
                         </form>

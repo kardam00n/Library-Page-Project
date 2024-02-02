@@ -47,15 +47,16 @@ const Layout = () => {
                     }
                 </div>
                 <div className="menus">
-                    {role === '' ?
-                        <div>
-                            <Link to="/login">Log in</Link>
-                            <a href="/signup" className="loginbutton">Sign up</a>
-                        </div> :
+                    {role === 'user' || role === 'admin' ?
                         <a href="/profile">
                             <div className="profile">
                                 <img src={profile} alt="Profile logo" />
-                            </div></a>}
+                            </div></a> :
+
+                        <div>
+                            <Link to="/login">Log in</Link>
+                            <a href="/signup" className="loginbutton">Sign up</a>
+                        </div>}
                 </div>
             </div>
 

@@ -51,7 +51,7 @@ const LoginPage = () => {
     };
 
     return (
-        <body1>
+        <div>
             <div className="mainPanel">
                 <div className="login-content">
                     <img src={login} alt="Log in" />
@@ -101,7 +101,7 @@ const LoginPage = () => {
                     </div>
                 </div>
             </div>
-        </body1>
+        </div>
     );
 };
 

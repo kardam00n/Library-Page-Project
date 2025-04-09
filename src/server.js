@@ -19,7 +19,6 @@ const __dirname = path.dirname(__filename);
 var l_user;
 
 app.set('pages', __dirname + '/pages'); // Files with views can be found in the 'views' directory
-app.set('view engine', 'pug'); // Use the 'Pug' template system
 app.locals.pretty = app.get('env') === 'development'; // The resulting HTML code will be indented in the development environment
 app.use(express.urlencoded({ extended: false }));
 /* ************************************************ */

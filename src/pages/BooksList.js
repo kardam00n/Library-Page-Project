@@ -132,7 +132,7 @@ const BooksList = () => {
     };
 
     return (
-        <body>
+        <div>
             <div className="mainPanel">
                 <div className="errorPanel"></div>
                 <div className="bookPanel">
@@ -150,7 +150,7 @@ const BooksList = () => {
                 <p>tel. +48 12 617 32 08</p>
                 <p>e-mail: bgagh@bg.agh.edu.pl</p>
             </div>
-        </body>
+        </div>
     );
 };
 

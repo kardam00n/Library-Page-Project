@@ -82,7 +82,7 @@ const RentedBooks = () => {
     }, []);
 
     return (
-        <body>
+        <div>
             <div className="mainPanel">
                 {error ? (
                     <h2>{errorMSG}</h2>
@@ -121,7 +121,7 @@ const RentedBooks = () => {
                 <p>tel. +48 12 617 32 08</p>
                 <p>e-mail: bgagh@bg.agh.edu.pl</p>
             </div>
-        </body >
+        </div >
     );
 };
 
